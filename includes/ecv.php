@@ -18,7 +18,7 @@ function ecv_eldis_solr_search_json($query_string = '', $printme = FALSE){
  * Gets all the group names and ids
  */
 function ecv_get_eldis_solr_group_data(){
-	$json_obj = ecv_eldis_solr_search_json('entity_type:group&fl=entity_id+entity_name+admin_owner_id');
+	$json_obj = ecv_eldis_solr_search_json('entity_type:group');/*&fl=entity_id+entity_name+admin_owner_id+member_id*/
 	$group_options = array();
 	if(isset($json_obj->response->docs)){
 		foreach($json_obj->response->docs as $doc){
@@ -105,22 +105,40 @@ function ecv_load_page_data(){
 	evc_get_form_data($page_vars);
 	$group_options= ecv_get_eldis_solr_group_data();
 	$base_query = ecv_build_base_query($group_options);
-	$page_vars['show_results'] = FALSE;
 	$page_vars['group_options'] = $group_options;
 	$page_vars['base_query'] = '';
 	$page_vars['group_number_of_messages'] = '';
-	$page_vars['group_name'] = ecv_get_group_attr($group_options, 'entity_name');
+	$page_vars['group_id'] = '';
+	$member_id_array = ecv_get_group_attr($group_options, 'member_id');
 	$group_admin_id = ecv_get_group_attr($group_options, 'admin_owner_id');
 	if(isset($_REQUEST['submit']) && $base_query){
+		if(isset($_REQUEST['group']) && $_REQUEST['group']){
+			$page_vars['group_id'] = $_REQUEST['group'];
+		}
 		$results_query = $base_query . '%20AND%20entity_type:message';
 		if(!isset($_REQUEST['include_admin'])){
 			$results_query .= '%20AND%20-author_entity_id:' . $group_admin_id;
 		}
 		$results_json = ecv_eldis_solr_search_json($results_query);
-		$group_number_of_messages = $results_json->response->numFound;
-		$page_vars['group_number_of_messages'] = $group_number_of_messages;
+		$group_total_number_of_messages = $results_json->response->numFound;
+		//print_r($results_json);
+		$group_member_number_of_messages = 0;
+		$group_admin_number_of_messages = 0;
+		if(isset($results_json->response->docs)){
+			foreach($results_json->response->docs as $doc){
+				if($doc->author_entity_id == $group_admin_id){
+					$group_admin_number_of_messages++;
+				}
+				elseif(in_array($doc->author_entity_id, $member_id_array)){
+					$group_member_number_of_messages++;
+				}
+			}
+		}
+		$page_vars['group_total_number_of_messages'] = $group_total_number_of_messages;
+		$page_vars['group_member_number_of_messages'] = $group_member_number_of_messages;
+		$page_vars['group_admin_number_of_messages'] = $group_admin_number_of_messages;
+		$page_vars['group_nonmember_number_of_messages'] = $group_total_number_of_messages - $group_member_number_of_messages - $group_admin_number_of_messages;
 		$page_vars['base_query'] = $results_query;
-		$page_vars['show_results'] = TRUE;
 	}
 	return $page_vars;	
 }

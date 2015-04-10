@@ -79,14 +79,27 @@ $(function() {
 				</form>
 			</div>
 			<div id="top-level-results" class="col-md-6">
+				<?php if($page_vars['group_id']): ?>
 				<h2>
-				<?php echo $page_vars['group_name'] ?>
+				<?php echo $page_vars['group_options'][$page_vars['group_id']]['entity_name'] ?>
 				</h2>
+				<p>
+				<?php echo $page_vars['group_options'][$page_vars['group_id']]['description'] ?>
+				</p>
+				<?php if(!empty($page_vars['form_start_date']) || !empty($page_vars['form_end_date'])): ?>
+					<p>Date range <?php if(!empty($page_vars['form_start_date'])): echo 'from ' . $page_vars['form_start_date']; endif;  ?> to 
+					<?php if(!empty($page_vars['form_end_date'])): echo $page_vars['form_end_date']; else: echo 'NOW'; endif;  ?></p>
+				<?php endif; ?>
+				<?php if(!$admin_included_checked): ?>
+				<p>Admins not included in results!</p>
+				<?php endif; ?>
 				<div class="results">
-					<?php if($page_vars['show_results']): ?>
-					<span class="labelspan">Number of messages: </span><span class="result"><?php echo $page_vars['group_number_of_messages'] ?></span>
-					<?php endif; ?>
+					<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
+					<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_admin_number_of_messages'] ?></span><br>
+					<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_nonmember_number_of_messages'] ?></span><br>
+					<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_member_number_of_messages'] ?></span><br>
 				</div>
+				<?php endif; ?>
 			</div>
 		
 		</div>
