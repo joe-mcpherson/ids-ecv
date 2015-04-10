@@ -25,5 +25,12 @@
 }
 
 #content-row {
+	border-top: 3px solid #ddd;
 	margin-top:2em;
+	padding-top:1.5em;
+}
+
+#heading-row h1 {
+	border-bottom: 3px solid #ddd;
+	margin: 1em 0 1.5em 0;	
 }
