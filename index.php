@@ -127,11 +127,13 @@ $(function() {
 				<p>Admins not included in results!</p>
 				<?php endif; ?>
 				<!--Div that will hold the pie chart-->
-    <div id="chart_div"></div>
+    			<div id="chart_div"></div>
 				
 				<div class="results">
 					<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
+					<?php if($admin_included_checked): ?>
 					<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_admin_number_of_messages'] ?></span><br>
+					<?php endif; ?>
 					<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_nonmember_number_of_messages'] ?></span><br>
 					<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_member_number_of_messages'] ?></span><br>
 				</div>
