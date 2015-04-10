@@ -15,7 +15,7 @@ function ecv_eldis_solr_search_json($query_string = '', $printme = FALSE){
 }
 
 /*
- * Gets all the group names and ids
+ * Gets all the group data
  */
 function ecv_get_eldis_solr_group_data(){
 	$json_obj = ecv_eldis_solr_search_json('entity_type:group');/*&fl=entity_id+entity_name+admin_owner_id+member_id*/
@@ -28,6 +28,22 @@ function ecv_get_eldis_solr_group_data(){
 	}
 	return $group_data;	
 }
+
+/*
+ * Gets all the user data
+ */
+function ecv_get_eldis_solr_user_data(){
+	$json_obj = ecv_eldis_solr_search_json('entity_type:user&fl=entity_id+entity_name+email+country');
+	$user_data = array();
+	if(isset($json_obj->response->docs)){
+		foreach($json_obj->response->docs as $doc){
+			$user_key = '' . $doc->entity_id;
+			$user_data[$user_key] = (array) $doc;
+		}
+	}
+	return $user_data;	
+}
+
 
 /*
  * Format date for solr to understand
@@ -103,7 +119,8 @@ function evc_get_form_data(&$page_vars){
 function ecv_load_page_data(){
 	$page_vars = array();
 	evc_get_form_data($page_vars);
-	$group_data= ecv_get_eldis_solr_group_data();
+	$group_data = ecv_get_eldis_solr_group_data();
+	$user_data = ecv_get_eldis_solr_user_data();
 	$base_query = ecv_build_base_query($group_data);
 	$page_vars['group_data'] = $group_data;
 	$page_vars['base_query'] = '';
@@ -121,7 +138,10 @@ function ecv_load_page_data(){
 		}
 		$results_json = ecv_eldis_solr_search_json($results_query);
 		$group_total_number_of_messages = $results_json->response->numFound;
-		//print_r($results_json);
+		
+		
+		/* Set data for number of messages breakdown */
+		
 		$group_member_number_of_messages = 0;
 		$group_admin_number_of_messages = 0;
 		if(isset($results_json->response->docs)){
@@ -138,7 +158,26 @@ function ecv_load_page_data(){
 		$page_vars['group_member_number_of_messages'] = $group_member_number_of_messages;
 		$page_vars['group_admin_number_of_messages'] = $group_admin_number_of_messages;
 		$page_vars['group_nonmember_number_of_messages'] = $group_total_number_of_messages - $group_member_number_of_messages - $group_admin_number_of_messages;
-		$page_vars['base_query'] = $results_query;
+		
+		
+		/* Set data for user/country */
+		$county_data = array();
+		if(isset($results_json->response->docs)){
+			foreach($results_json->response->docs as $doc){
+				$user_key = ''. $doc->author_entity_id;
+				if(isset($user_data[$user_key])){
+					$user_country = $user_data[$user_key]['country'];
+					if(!isset($county_data[$user_country])){
+						$county_data[$user_country] = 1;
+					} else {
+						$county_data[$user_country]++;
+					}
+				}
+			}		
+		}
+		$page_vars['county_data '] = $county_data;
+		
+		$page_vars['base_query '] = $base_query;
 	}
 	return $page_vars;	
 }

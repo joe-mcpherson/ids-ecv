@@ -57,7 +57,7 @@ $(function() {
                        'height':300};
 
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.PieChart(document.getElementById('group_message_overview_results_div'));
         chart.draw(data, options);
       }
       <?php endif; ?>
@@ -110,6 +110,11 @@ $(function() {
 					</div>
 					<input name="submit" id="submit" type="submit" value="Submit" />
 				</form>
+				<div id="left-side-results">
+				<?php if($page_vars['county_data ']):  print_r($page_vars['county_data ']) ?>
+				
+				<?php endif; ?>
+				</div> 
 			</div>
 			<div id="top-level-results" class="col-md-6">
 				<?php if($page_vars['group_id']): ?>
@@ -127,7 +132,7 @@ $(function() {
 				<p>Admins not included in results!</p>
 				<?php endif; ?>
 				<!--Div that will hold the pie chart-->
-    			<div id="chart_div"></div>
+    			<div id="group_message_overview_results_div"></div>
 				
 				<div class="results">
 					<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
