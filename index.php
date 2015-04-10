@@ -13,10 +13,11 @@ $page_vars = ecv_load_page_data();
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" href="css/ecv.css" />
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src="js/ecv.js"></script>
-<script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="js/ecv.js"></script>
+<script type="text/javascript">
 $(function() {
 	var form_start_date = '<?php if(isset($page_vars['form_start_date'])): echo $page_vars['form_start_date']; endif;  ?>';
 	var form_end_date = '<?php if(isset($page_vars['form_end_date'])): echo $page_vars['form_end_date']; endif;  ?>';
@@ -27,7 +28,39 @@ $(function() {
 		$('#end_date').val(form_end_date);
 	}
 });
+<?php if($page_vars['group_id']): ?>
+/* Google charts stuff */
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
 
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'User type');
+        data.addColumn('number', 'Messages');
+        data.addRows([
+          ['Admin', <?php echo $page_vars['group_admin_number_of_messages'] ?>],
+          ['Member', <?php echo $page_vars['group_member_number_of_messages'] ?>],
+          ['Non-member', <?php echo $page_vars['group_nonmember_number_of_messages'] ?>]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Number of messages by user type',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+      <?php endif; ?>
 </script>
 </head>
 <body>
@@ -93,6 +126,9 @@ $(function() {
 				<?php if(!$admin_included_checked): ?>
 				<p>Admins not included in results!</p>
 				<?php endif; ?>
+				<!--Div that will hold the pie chart-->
+    <div id="chart_div"></div>
+				
 				<div class="results">
 					<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
 					<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_admin_number_of_messages'] ?></span><br>
