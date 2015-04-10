@@ -1,18 +1,4 @@
 <?php
-/*
- * Makes a call to the Eldis solr webservice passing query string and returns Simple XML Object
- */
-function ecv_eldis_solr_search_xml($query_string = '', $printme = FALSE){
-	$source_base_url = 'http://ec.solr.test.ids.ac.uk';
-	if($query_string){
-		$source_url = $source_base_url . '/?q=' . $query_string . '&rows=99999';
-	}
-	if($printme) { print($source_url);}
-	$xmlstr = file_get_contents($source_url);
-	$xmlobj = new SimpleXMLElement($xmlstr);
-	if($printme) {print_r($xmlobj);}
-	return $xmlobj;
-}
 
 /*
  * Makes a call to the Eldis solr webservice passing query string and returns json Object
@@ -130,9 +116,8 @@ function ecv_load_page_data(){
 		if(!isset($_REQUEST['include_admin'])){
 			$results_query .= '%20AND%20-author_entity_id:' . $group_admin_id;
 		}
-		$results_xml = ecv_eldis_solr_search_xml($results_query);
-		$results_attributes = $results_xml->result->attributes();
-		$group_number_of_messages = $results_attributes['numFound'];
+		$results_json = ecv_eldis_solr_search_json($results_query);
+		$group_number_of_messages = $results_json->response->numFound;
 		$page_vars['group_number_of_messages'] = $group_number_of_messages;
 		$page_vars['base_query'] = $results_query;
 		$page_vars['show_results'] = TRUE;
