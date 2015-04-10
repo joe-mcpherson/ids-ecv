@@ -5,7 +5,7 @@
 function ecv_eldis_solr_search_xml($query_string = '', $printme = FALSE){
 	$source_base_url = 'http://ec.solr.test.ids.ac.uk';
 	if($query_string){
-		$source_url = $source_base_url . '/?q=' . $query_string;
+		$source_url = $source_base_url . '/?q=' . $query_string . '&rows=99999';
 	}
 	if($printme) { print($source_url);}
 	$xmlstr = file_get_contents($source_url);
@@ -15,19 +15,29 @@ function ecv_eldis_solr_search_xml($query_string = '', $printme = FALSE){
 }
 
 /*
+ * Makes a call to the Eldis solr webservice passing query string and returns json Object
+ */
+function ecv_eldis_solr_search_json($query_string = '', $printme = FALSE){
+	$source_base_url = 'http://ec.solr.test.ids.ac.uk';
+	if($query_string){
+		$source_url = $source_base_url . '/?q=' . $query_string . '&rows=99999&indent=on&wt=json';
+	}
+	if($printme) { print($source_url);}
+	$json = file_get_contents($source_url);
+	$json_obj = json_decode($json);
+	return $json_obj;
+}
+
+/*
  * Gets all the group names and ids
  */
 function ecv_get_eldis_solr_group_data(){
-	$xmlobj = ecv_eldis_solr_search_xml('entity_type:group&fl=entity_id+entity_name+admin_owner_id&rows=1000');
+	$json_obj = ecv_eldis_solr_search_json('entity_type:group&fl=entity_id+entity_name+admin_owner_id');
 	$group_options = array();
-	if(isset($xmlobj->result->doc)){
-		foreach($xmlobj->result->doc as $doc){
-			$group_key = '' . $doc->str[1];
-			$group_name = trim('' . $doc->str[2]);
-			$admin_id = '' . $doc->str[0];
-			$group_options[$group_key] = array();
-			$group_options[$group_key]['name'] = $group_name;
-			$group_options[$group_key]['admin_id'] = $admin_id;
+	if(isset($json_obj->response->docs)){
+		foreach($json_obj->response->docs as $doc){
+			$group_key = '' . $doc->entity_id;
+			$group_options[$group_key] = (array) $doc;
 		}
 	}
 	return $group_options;	
@@ -50,7 +60,7 @@ function ecv_build_base_query($group_options){
 	if(isset($_REQUEST['submit'])){
 		if(isset($_REQUEST['group']) && $_REQUEST['group']){
 			$group_key = $_REQUEST['group'];
-			$group_header = $group_options[$group_key]['name'];
+			$group_header = $group_options[$group_key]['entity_name'];
 			$query .= 'group_id:' . $group_key;
 		}
 		$at_least_one_date_set = FALSE;
@@ -97,7 +107,7 @@ function evc_get_form_data(&$page_vars){
 		$page_vars['form_group'] = (isset($_REQUEST['group'])) ? $_REQUEST['group']:'';
 		$page_vars['form_start_date'] = (isset($_REQUEST['start_date'])) ? $_REQUEST['start_date']:'';
 		$page_vars['form_end_date'] = (isset($_REQUEST['end_date'])) ? $_REQUEST['end_date']:'';
-		$page_vars['form_admin_included'] = (isset($_REQUEST['admin_included'])) ? $_REQUEST['admin_included']:'';
+		$page_vars['form_include_admin'] = (isset($_REQUEST['include_admin'])) ? $_REQUEST['include_admin']:'';
 	}		
 }
 
@@ -113,8 +123,8 @@ function ecv_load_page_data(){
 	$page_vars['group_options'] = $group_options;
 	$page_vars['base_query'] = '';
 	$page_vars['group_number_of_messages'] = '';
-	$page_vars['group_name'] = ecv_get_group_attr($group_options, 'name');
-	$group_admin_id = ecv_get_group_attr($group_options, 'admin_id');
+	$page_vars['group_name'] = ecv_get_group_attr($group_options, 'entity_name');
+	$group_admin_id = ecv_get_group_attr($group_options, 'admin_owner_id');
 	if(isset($_REQUEST['submit']) && $base_query){
 		$results_query = $base_query . '%20AND%20entity_type:message';
 		if(!isset($_REQUEST['include_admin'])){

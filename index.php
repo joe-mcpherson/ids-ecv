@@ -46,7 +46,7 @@ $(function() {
 							foreach($page_vars['group_options'] as $group_key => $group_obj):
 							$selected = ($group_key == $page_vars['form_group']) ? 'selected="selected"':'';
 							?>
-							<option value="<?php echo $group_key; ?>" <?php echo $selected; ?>><?php echo $group_obj['name']; ?></option>
+							<option value="<?php echo $group_key; ?>" <?php echo $selected; ?>><?php echo $group_obj['entity_name']; ?></option>
 							<?php
 							endforeach;
 							?>
@@ -65,7 +65,7 @@ $(function() {
 					
 					<?php 
 					$admin_included_checked = '';
-					if(!isset($page_vars['form_admin_included']) || (isset($page_vars['form_admin_included']) && $page_vars['form_admin_included'])){
+					if(!isset($page_vars['form_include_admin']) || (isset($page_vars['form_include_admin']) && $page_vars['form_include_admin'])){
 						$admin_included_checked ='checked="checked"';
 					}
 					?>
