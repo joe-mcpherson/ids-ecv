@@ -76,14 +76,14 @@ function ecv_build_base_query($group_options){
 }
 
 /*
- * Gets group name from filters
+ * Gets group attribute from group key
  */
-function ecv_get_group_name($group_options){
+function ecv_get_group_attr($group_options, $attr){
 	$group_name = '';
 	if(isset($_REQUEST['submit'])){
 		if(isset($_REQUEST['group'])){
 			$group_key = $_REQUEST['group'];
-			$group_name = $group_options[$group_key]['name'];
+			$group_name = $group_options[$group_key][$attr];
 		}
 	}	
 	return $group_name;
@@ -112,9 +112,9 @@ function ecv_load_page_data(){
 	$page_vars['group_options'] = $group_options;
 	$page_vars['base_query'] = '';
 	$page_vars['group_number_of_messages'] = '';
-	$page_vars['group_name'] = ecv_get_group_name($group_options);
+	$page_vars['group_name'] = ecv_get_group_attr($group_options, 'name');
 	if(isset($_REQUEST['submit'])){
-		$messages_query = $base_query . '%20AND%20entity_type:message';
+		$messages_query = $base_query . '%20AND%20entity_type:message%20AND%20-author_entity_id:.5a325752';
 		$group_number_of_messages_xml = ecv_eldis_solr_search_xml($messages_query);
 		$group_number_of_messages_result_attributes = $group_number_of_messages_xml->result->attributes();
 		$group_number_of_messages = $group_number_of_messages_result_attributes['numFound'];
