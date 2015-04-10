@@ -16,6 +16,19 @@ $page_vars = ecv_load_page_data();
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="js/ecv.js"></script>
+<script>
+$(function() {
+	var form_start_date = '<?php if(isset($page_vars['form_start_date'])): echo $page_vars['form_start_date']; endif;  ?>';
+	var form_end_date = '<?php if(isset($page_vars['form_end_date'])): echo $page_vars['form_end_date']; endif;  ?>';
+	if(form_start_date){
+		$('#start_date').val(form_start_date);
+	}
+	if(form_end_date){
+		$('#end_date').val(form_end_date);
+	}
+});
+
+</script>
 </head>
 <body>
 	<div class="container">
@@ -31,8 +44,9 @@ $page_vars = ecv_load_page_data();
 							<option value=""></option>
 							<?php
 							foreach($page_vars['group_options'] as $group_key => $group_name):
+							$selected = ($group_key == $page_vars['form_group']) ? 'selected="selected"':'';
 							?>
-							<option value="<?php echo $group_key; ?>"><?php echo $group_name; ?></option>
+							<option value="<?php echo $group_key; ?>" <?php echo $selected; ?>><?php echo $group_name; ?></option>
 							<?php
 							endforeach;
 							?>
@@ -40,13 +54,13 @@ $page_vars = ecv_load_page_data();
 					</div>
 
 					<div class="ui-widget">
-						<label for="start_date">Start date</label> <input
-							class="datepicker" name="start_date" id="start_date" type="text" />
+						<label for="start_date">Start date</label> 
+						<input class="datepicker" name="start_date" id="start_date" type="text" value="<?php echo $page_vars['form_start_date'] ?>" />
 					</div>
 
 					<div class="ui-widget">
-						<label for="end_date">End date</label> <input class="datepicker"
-							name="end_date" id="end_date" type="text" />
+						<label for="end_date">End date</label> 
+						<input class="datepicker" name="end_date" id="end_date" type="text" value="<?php echo $page_vars['form_end_date'] ?>" />
 					</div>
 
 					<div class="ui-widget">
@@ -65,6 +79,10 @@ $page_vars = ecv_load_page_data();
 					<span class="labelspan">Number of messages: </span><span class="result"><?php echo $page_vars['group_number_of_messages'] ?></span>
 				</div>
 			</div>
+		
+		</div>
+		<div id="content-row" class="row">
+			<p><?php echo $page_vars['base_query'] ?><br/><a href="http://ec.solr.test.ids.ac.uk?q=<?php echo $page_vars['base_query'] ?>" target="_blank">launch</a></p>
 		</div>
 	</div>
 </body>

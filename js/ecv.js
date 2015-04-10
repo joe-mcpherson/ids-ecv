@@ -133,5 +133,5 @@
     $( "#group" ).combobox();
 	/* Date popup */
 	$( ".datepicker" ).datepicker();
-	$( ".datepicker" ).datepicker('option','dateFormat','dd/mm/yy');
+	$( ".datepicker" ).datepicker('option','dateFormat','dd-mm-yy');
   });
