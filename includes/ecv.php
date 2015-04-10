@@ -18,11 +18,16 @@ function ecv_eldis_solr_search_xml($query_string = '', $printme = FALSE){
  * Gets all the group names and ids
  */
 function ecv_get_eldis_solr_group_data(){
-	$xmlobj = ecv_eldis_solr_search_xml('entity_type:group&fl=entity_id+entity_name&rows=1000');
+	$xmlobj = ecv_eldis_solr_search_xml('entity_type:group&fl=entity_id+entity_name+admin_owner_id&rows=1000');
 	$group_options = array();
 	if(isset($xmlobj->result->doc)){
 		foreach($xmlobj->result->doc as $doc){
-			$group_options['' . $doc->str[0]] = trim('' . $doc->str[1]);
+			$group_key = '' . $doc->str[1];
+			$group_name = trim('' . $doc->str[2]);
+			$admin_id = '' . $doc->str[0];
+			$group_options[$group_key] = array();
+			$group_options[$group_key]['name'] = $group_name;
+			$group_options[$group_key]['admin_id'] = $admin_id;
 		}
 	}
 	return $group_options;	
@@ -45,7 +50,7 @@ function ecv_build_base_query($group_options){
 	if(isset($_REQUEST['submit'])){
 		if(isset($_REQUEST['group'])){
 			$group_key = $_REQUEST['group'];
-			$group_header = $group_options[$group_key];
+			$group_header = $group_options[$group_key]['name'];
 			$query .= 'group_id:' . $group_key;
 		}
 		$at_least_one_date_set = FALSE;
@@ -78,7 +83,7 @@ function ecv_get_group_name($group_options){
 	if(isset($_REQUEST['submit'])){
 		if(isset($_REQUEST['group'])){
 			$group_key = $_REQUEST['group'];
-			$group_name = $group_options[$group_key];
+			$group_name = $group_options[$group_key]['name'];
 		}
 	}	
 	return $group_name;

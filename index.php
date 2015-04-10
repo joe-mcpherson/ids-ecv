@@ -43,10 +43,10 @@ $(function() {
 						<label for="group">Group</label> <select id="group" name="group">
 							<option value=""></option>
 							<?php
-							foreach($page_vars['group_options'] as $group_key => $group_name):
+							foreach($page_vars['group_options'] as $group_key => $group_obj):
 							$selected = ($group_key == $page_vars['form_group']) ? 'selected="selected"':'';
 							?>
-							<option value="<?php echo $group_key; ?>" <?php echo $selected; ?>><?php echo $group_name; ?></option>
+							<option value="<?php echo $group_key; ?>" <?php echo $selected; ?>><?php echo $group_obj['name']; ?></option>
 							<?php
 							endforeach;
 							?>
