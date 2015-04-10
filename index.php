@@ -34,13 +34,14 @@ $(function() {
       google.load('visualization', '1.0', {'packages':['corechart']});
 
       // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
+      google.setOnLoadCallback(drawCharts);
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
-      function drawChart() {
+      function drawCharts() {
 
+    	/* Group messages breakdown pie chart */
         // Create the data table.
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'User type');
@@ -59,6 +60,33 @@ $(function() {
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('group_message_overview_results_div'));
         chart.draw(data, options);
+
+		<?php if($page_vars['country_data']): ?>
+
+    	/* Messages by country breakdown bar graph */
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'Messages');
+        data.addRows([
+
+		<?php foreach($page_vars['country_data'] as $country => $num_messages): ?>
+          ['<?php echo $country; ?>', <?php echo $num_messages; ?>],
+         <?php endforeach; ?> 
+        ]);
+
+        // Set chart options
+        var options = {'title':'Messages by country',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.BarChart(document.getElementById('group_by_country_results_div'));
+        chart.draw(data, options);
+		
+		<?php endif; ?>
+
+        
       }
       <?php endif; ?>
 </script>
@@ -111,8 +139,8 @@ $(function() {
 					<input name="submit" id="submit" type="submit" value="Submit" />
 				</form>
 				<div id="left-side-results">
-				<?php if($page_vars['county_data ']):  print_r($page_vars['county_data ']) ?>
-				
+				<?php if($page_vars['country_data']):  ?>
+				<div id="group_by_country_results_div"></div>
 				<?php endif; ?>
 				</div> 
 			</div>

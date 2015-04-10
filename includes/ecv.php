@@ -161,23 +161,23 @@ function ecv_load_page_data(){
 		
 		
 		/* Set data for user/country */
-		$county_data = array();
+		$country_data = array();
 		if(isset($results_json->response->docs)){
 			foreach($results_json->response->docs as $doc){
 				$user_key = ''. $doc->author_entity_id;
 				if(isset($user_data[$user_key])){
 					$user_country = $user_data[$user_key]['country'];
-					if(!isset($county_data[$user_country])){
-						$county_data[$user_country] = 1;
+					if(!isset($country_data[$user_country])){
+						$country_data[$user_country] = 1;
 					} else {
-						$county_data[$user_country]++;
+						$country_data[$user_country]++;
 					}
 				}
 			}		
 		}
-		$page_vars['county_data '] = $county_data;
+		$page_vars['country_data'] = $country_data;
 		
-		$page_vars['base_query '] = $base_query;
+		$page_vars['base_query'] = $base_query;
 	}
 	return $page_vars;	
 }
