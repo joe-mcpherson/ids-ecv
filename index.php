@@ -76,7 +76,7 @@ $(function() {
 						<label for="group">Group</label> <select id="group" name="group">
 							<option value=""></option>
 							<?php
-							foreach($page_vars['group_options'] as $group_key => $group_obj):
+							foreach($page_vars['group_data'] as $group_key => $group_obj):
 							$selected = ($group_key == $page_vars['form_group']) ? 'selected="selected"':'';
 							?>
 							<option value="<?php echo $group_key; ?>" <?php echo $selected; ?>><?php echo $group_obj['entity_name']; ?></option>
@@ -114,10 +114,10 @@ $(function() {
 			<div id="top-level-results" class="col-md-6">
 				<?php if($page_vars['group_id']): ?>
 				<h2>
-				<?php echo $page_vars['group_options'][$page_vars['group_id']]['entity_name'] ?>
+				<?php echo $page_vars['group_data'][$page_vars['group_id']]['entity_name'] ?>
 				</h2>
 				<p>
-				<?php echo $page_vars['group_options'][$page_vars['group_id']]['description'] ?>
+				<?php echo $page_vars['group_data'][$page_vars['group_id']]['description'] ?>
 				</p>
 				<?php if(!empty($page_vars['form_start_date']) || !empty($page_vars['form_end_date'])): ?>
 					<p>Date range <?php if(!empty($page_vars['form_start_date'])): echo 'from ' . $page_vars['form_start_date']; endif;  ?> to 
