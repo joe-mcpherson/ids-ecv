@@ -19,3 +19,11 @@
 	margin:0 auto;
 	width:960px;
 }
+
+.ui-widget {
+	margin-bottom:1em;
+}
+
+#content-row {
+	margin-top:2em;
+}

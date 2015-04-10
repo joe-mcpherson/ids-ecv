@@ -76,7 +76,9 @@ $(function() {
 				<?php echo $page_vars['group_name'] ?>
 				</h2>
 				<div class="results">
+					<?php if($page_vars['show_results']): ?>
 					<span class="labelspan">Number of messages: </span><span class="result"><?php echo $page_vars['group_number_of_messages'] ?></span>
+					<?php endif; ?>
 				</div>
 			</div>
 		

@@ -49,14 +49,14 @@ function ecv_build_base_query($group_options){
 			$query .= 'group_id:' . $group_key;
 		}
 		$at_least_one_date_set = FALSE;
-		if(isset($_REQUEST['start_date'])){
+		if(isset($_REQUEST['start_date']) && trim($_REQUEST['start_date']) != ''){
 			$start_date_solr = ecv_format_date_for_solr($_REQUEST['start_date']);
 			$at_least_one_date_set = TRUE;
 		} else {
 			/* just set to 1970 if start date not set */
 			$start_date_solr = ecv_format_date_for_solr('1-1-1970');
 		}
-		if(isset($_REQUEST['end_date'])){
+		if(isset($_REQUEST['end_date']) && trim($_REQUEST['end_date']) != ''){
 			$end_date_solr = ecv_format_date_for_solr($_REQUEST['end_date']);
 			$at_least_one_date_set = TRUE;
 		} else {
@@ -103,14 +103,20 @@ function ecv_load_page_data(){
 	evc_get_form_data($page_vars);
 	$group_options= ecv_get_eldis_solr_group_data();
 	$base_query = ecv_build_base_query($group_options);
+	$page_vars['show_results'] = FALSE;
 	$page_vars['group_options'] = $group_options;
+	$page_vars['base_query'] = '';
+	$page_vars['group_number_of_messages'] = '';
 	$page_vars['group_name'] = ecv_get_group_name($group_options);
-	$messages_query = $base_query . '%20AND%20entity_type:message';
-	$group_number_of_messages_xml = ecv_eldis_solr_search_xml($messages_query);
-	$group_number_of_messages_result_attributes = $group_number_of_messages_xml->result->attributes();
-	$group_number_of_messages = $group_number_of_messages_result_attributes['numFound'];
-	$page_vars['group_number_of_messages'] = $group_number_of_messages;
-	$page_vars['base_query'] = $messages_query;
+	if(isset($_REQUEST['submit'])){
+		$messages_query = $base_query . '%20AND%20entity_type:message';
+		$group_number_of_messages_xml = ecv_eldis_solr_search_xml($messages_query);
+		$group_number_of_messages_result_attributes = $group_number_of_messages_xml->result->attributes();
+		$group_number_of_messages = $group_number_of_messages_result_attributes['numFound'];
+		$page_vars['group_number_of_messages'] = $group_number_of_messages;
+		$page_vars['base_query'] = $messages_query;
+		$page_vars['show_results'] = TRUE;
+	}
 	return $page_vars;	
 }
 
