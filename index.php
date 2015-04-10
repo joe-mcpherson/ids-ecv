@@ -62,11 +62,18 @@ $(function() {
 						<label for="end_date">End date</label> 
 						<input class="datepicker" name="end_date" id="end_date" type="text" value="<?php echo $page_vars['form_end_date'] ?>" />
 					</div>
-
+					
+					<?php 
+					$admin_included_checked = '';
+					if(!isset($page_vars['form_admin_included']) || (isset($page_vars['form_admin_included']) && $page_vars['form_admin_included'])){
+						$admin_included_checked ='checked="checked"';
+					}
+					?>
+					
 					<div class="ui-widget">
 						<label for="include_admin">Admin included</label> <input
 							name="include_admin" id="include_admin" type="checkbox" value="1"
-							checked="checked" />
+							<?php echo $admin_included_checked; ?> />
 					</div>
 					<input name="submit" id="submit" type="submit" value="Submit" />
 				</form>

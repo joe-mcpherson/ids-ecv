@@ -48,7 +48,7 @@ function ecv_format_date_for_solr($raw_date){
 function ecv_build_base_query($group_options){
 	$query = '';
 	if(isset($_REQUEST['submit'])){
-		if(isset($_REQUEST['group'])){
+		if(isset($_REQUEST['group']) && $_REQUEST['group']){
 			$group_key = $_REQUEST['group'];
 			$group_header = $group_options[$group_key]['name'];
 			$query .= 'group_id:' . $group_key;
@@ -67,7 +67,7 @@ function ecv_build_base_query($group_options){
 		} else {
 			$end_date_solr = 'NOW';
 		}
-		if($at_least_one_date_set){
+		if($at_least_one_date_set && $_REQUEST['group']){
 			$query .= "%20AND%20date_created:[$start_date_solr%20TO%20$end_date_solr]";
 		}
 		
@@ -79,14 +79,14 @@ function ecv_build_base_query($group_options){
  * Gets group attribute from group key
  */
 function ecv_get_group_attr($group_options, $attr){
-	$group_name = '';
+	$group_attr = '';
 	if(isset($_REQUEST['submit'])){
-		if(isset($_REQUEST['group'])){
+		if(isset($_REQUEST['group']) && $_REQUEST['group']){
 			$group_key = $_REQUEST['group'];
-			$group_name = $group_options[$group_key][$attr];
+			$group_attr = $group_options[$group_key][$attr];
 		}
 	}	
-	return $group_name;
+	return $group_attr;
 }
 
 /*
@@ -97,6 +97,7 @@ function evc_get_form_data(&$page_vars){
 		$page_vars['form_group'] = (isset($_REQUEST['group'])) ? $_REQUEST['group']:'';
 		$page_vars['form_start_date'] = (isset($_REQUEST['start_date'])) ? $_REQUEST['start_date']:'';
 		$page_vars['form_end_date'] = (isset($_REQUEST['end_date'])) ? $_REQUEST['end_date']:'';
+		$page_vars['form_admin_included'] = (isset($_REQUEST['admin_included'])) ? $_REQUEST['admin_included']:'';
 	}		
 }
 
@@ -113,9 +114,12 @@ function ecv_load_page_data(){
 	$page_vars['base_query'] = '';
 	$page_vars['group_number_of_messages'] = '';
 	$page_vars['group_name'] = ecv_get_group_attr($group_options, 'name');
-	$page_vars['group_name'] = ecv_get_group_attr($group_options, 'name');
-	if(isset($_REQUEST['submit'])){
-		$results_query = $base_query . '%20AND%20entity_type:message%20AND%20-author_entity_id:.5a325752';
+	$group_admin_id = ecv_get_group_attr($group_options, 'admin_id');
+	if(isset($_REQUEST['submit']) && $base_query){
+		$results_query = $base_query . '%20AND%20entity_type:message';
+		if(!isset($_REQUEST['include_admin'])){
+			$results_query .= '%20AND%20-author_entity_id:' . $group_admin_id;
+		}
 		$results_xml = ecv_eldis_solr_search_xml($results_query);
 		$results_attributes = $results_xml->result->attributes();
 		$group_number_of_messages = $results_attributes['numFound'];
