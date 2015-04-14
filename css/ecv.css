@@ -34,3 +34,7 @@
 	border-bottom: 3px solid #ddd;
 	margin: 1em 0 1.5em 0;	
 }
+
+#footer {
+	border-top:none; 
+}

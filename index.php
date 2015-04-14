@@ -12,6 +12,9 @@ $page_vars = ecv_load_page_data();
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<link href="http://explorer.okhub.org/css/main.css" rel="stylesheet" type="text/css">
+<link href="http://www.okhub.org/static/globalnav.css" rel="stylesheet" type="text/css">
+<link href="http://data.okhub.org/sites/all/themes/skeletontheme/css/style.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="css/ecv.css" />
 <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -92,6 +95,7 @@ $(function() {
 </script>
 </head>
 <body>
+<?php include('/var/www/includes/nav.shtml'); ?>
 	<div class="container">
 		<div class="row">
 			<div id="heading-row" class="col-md-12">
@@ -178,5 +182,6 @@ $(function() {
 			<p><?php echo $page_vars['base_query'] ?><br/><a href="http://ec.solr.test.ids.ac.uk?q=<?php echo $page_vars['base_query'] ?>" target="_blank">launch</a></p>
 		</div>
 	</div>
+<?php include('/var/www/includes/footer.php'); ?>
 </body>
 </html>
