@@ -178,9 +178,11 @@ $(function() {
 			</div>
 		
 		</div>
-		<div id="content-row" class="row">
-			<p><?php echo $page_vars['base_query'] ?><br/><a href="http://ec.solr.test.ids.ac.uk?q=<?php echo $page_vars['base_query'] ?>" target="_blank">launch</a></p>
+		<?php if(ECV_DEBUG): ?>
+		<div id="debug-row" class="row">
+			<p><?php echo $page_vars['base_query'] ?><br/><a href="<?php echo ECV_BASE_URL; ?>?q=<?php echo $page_vars['base_query'] ?>" target="_blank">launch</a></p>
 		</div>
+		<?php endif; ?>
 	</div>
 <?php include('/var/www/includes/footer.php'); ?>
 </body>

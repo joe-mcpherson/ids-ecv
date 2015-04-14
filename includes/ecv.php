@@ -1,10 +1,11 @@
 <?php
-
+define('ECV_BASE_URL', 'http://ec.solr.test.ids.ac.uk');
+define('ECV_DEBUG', FALSE);
 /*
  * Makes a call to the Eldis solr webservice passing query string and returns json Object
  */
 function ecv_eldis_solr_search_json($query_string = '', $printme = FALSE){
-	$source_base_url = 'http://ec.solr.test.ids.ac.uk';
+	$source_base_url = ECV_BASE_URL;
 	if($query_string){
 		$source_url = $source_base_url . '/?q=' . $query_string . '&rows=99999&indent=on&wt=json';
 	}
