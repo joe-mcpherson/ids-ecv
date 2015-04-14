@@ -143,7 +143,7 @@ $(function() {
 					<input name="submit" id="submit" type="submit" value="Submit" />
 				</form>
 				<div id="left-side-results">
-				<?php if($page_vars['country_data']):  ?>
+				<?php if(isset($page_vars['country_data'])):  ?>
 				<div id="group_by_country_results_div"></div>
 				<?php endif; ?>
 				</div> 
