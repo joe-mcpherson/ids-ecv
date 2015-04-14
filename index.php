@@ -153,12 +153,15 @@ $(function() {
 			<div id="right-side-main" class="col-md-6 main-col">
 				<div id="group-data-results">
 					<?php if($page_vars['group_id']): ?>
+					<img class="group-picture" src="<?php echo $page_vars['group_data'][$page_vars['group_id']]['picture'] ?>"/>
 					<h2>
 					<?php echo $page_vars['group_data'][$page_vars['group_id']]['entity_name'] ?>
 					</h2>
+					<p><span class="labelspan">number of visits: </span><span class="result"><?php echo $page_vars['group_data'][$page_vars['group_id']]['visit_count'] ?></span></p>
+					
 					<p>
 					<?php echo $page_vars['group_data'][$page_vars['group_id']]['description'] ?>
-					</p>
+					</p>			
 				</div>
 				<div id="right-side-results">
 					<?php if(!empty($page_vars['form_start_date']) || !empty($page_vars['form_end_date'])): ?>

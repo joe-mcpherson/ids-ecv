@@ -42,3 +42,9 @@
 .main-col {
 	margin-bottom:2em;
 }
+
+.group-picture {
+	float:right;
+	display:inline;
+	margin:0 0 5px 10px;
+}
