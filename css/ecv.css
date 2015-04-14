@@ -56,4 +56,13 @@ span.result {
 
 .ui-widget {
 	font-size:1em;
+	font-family:inherit;
+}
+
+.custom-combobox {
+	width:60%;
+}
+
+.custom-combobox  input {
+	width:100%;
 }
