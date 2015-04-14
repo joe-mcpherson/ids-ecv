@@ -66,3 +66,12 @@ span.result {
 .custom-combobox  input {
 	width:100%;
 }
+
+#user-filters label {
+	width:15%;
+}
+
+.date-text {
+	font-size:1.2em; 
+	font-weight:bold;	
+}

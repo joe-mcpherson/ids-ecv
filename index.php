@@ -166,8 +166,8 @@ $(function() {
 				</div>
 				<div id="right-side-results">
 					<?php if(!empty($page_vars['form_start_date']) || !empty($page_vars['form_end_date'])): ?>
-						<p>Date range <?php if(!empty($page_vars['form_start_date'])): echo 'from ' . $page_vars['form_start_date']; endif;  ?> to 
-						<?php if(!empty($page_vars['form_end_date'])): echo $page_vars['form_end_date']; else: echo 'NOW'; endif;  ?></p>
+						<p>Date range <?php if(!empty($page_vars['form_start_date'])): echo 'from <span class="date-text">' . $page_vars['form_start_date'] . '</span>'; endif;  ?> to 
+						<span class="date-text"><?php if(!empty($page_vars['form_end_date'])): echo $page_vars['form_end_date']; else: echo 'NOW'; endif;  ?></span></p>
 					<?php endif; ?>
 					
 					<?php if(!$admin_included_checked): ?>
