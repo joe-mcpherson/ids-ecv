@@ -101,8 +101,9 @@ $(function() {
 			<div id="heading-row" class="col-md-12">
 				<h1>Eldis Communities Visualisation</h1>
 			</div>
-
-			<div id="left-side-main" class="col-md-6 main-col">
+		</div>
+		<div class="row">
+			<div class="col-md-6 main-col">
 				<div id="user-filters">
 					<form action="<?php echo $this_page_url; ?>" method="get">
 						<div class="ui-widget">
@@ -143,14 +144,9 @@ $(function() {
 						</div>
 						<input name="submit" id="submit" type="submit" value="Submit" />
 					</form>
-					<div id="left-side-results">
-					<?php if(isset($page_vars['country_data'])):  ?>
-					<div id="group_by_country_results_div"></div>
-					<?php endif; ?>
-					</div> 
 				</div>
 			</div>
-			<div id="right-side-main" class="col-md-6 main-col">
+			<div class="col-md-6 main-col">
 				<?php if($page_vars['group_id']): ?>
 				<div id="group-data-results">
 					
@@ -164,7 +160,7 @@ $(function() {
 					<?php echo $page_vars['group_data'][$page_vars['group_id']]['description'] ?>
 					</p>			
 				</div>
-				<div id="right-side-results">
+				<div class="right-side-results">
 					<?php if(!empty($page_vars['form_start_date']) || !empty($page_vars['form_end_date'])): ?>
 						<p>Date range <?php if(!empty($page_vars['form_start_date'])): echo 'from <span class="date-text">' . $page_vars['form_start_date'] . '</span>'; endif;  ?> to 
 						<span class="date-text"><?php if(!empty($page_vars['form_end_date'])): echo $page_vars['form_end_date']; else: echo 'NOW'; endif;  ?></span></p>
@@ -173,6 +169,21 @@ $(function() {
 					<?php if(!$admin_included_checked): ?>
 					<p>Admins not included in results!</p>
 					<?php endif; ?>
+				</div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 main-col">
+				<div class="left-side-results">
+				<?php if(isset($page_vars['country_data'])):  ?>
+				<div id="group_by_country_results_div"></div>
+				<?php endif; ?>
+				</div> 
+			</div>
+			<div class="col-md-6 main-col">
+				<?php if($page_vars['group_id']): ?>
+				<div class="right-side-results">
 					<?php if($page_vars['group_total_number_of_messages']): ?>
 					<!--Div that will hold the pie chart-->
 	    			<div id="group_message_overview_results_div"></div>
