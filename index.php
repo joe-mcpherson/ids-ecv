@@ -151,8 +151,9 @@ $(function() {
 				</div>
 			</div>
 			<div id="right-side-main" class="col-md-6 main-col">
+				<?php if($page_vars['group_id']): ?>
 				<div id="group-data-results">
-					<?php if($page_vars['group_id']): ?>
+					
 					<img class="group-picture" src="<?php echo $page_vars['group_data'][$page_vars['group_id']]['picture'] ?>"/>
 					<h2>
 					<?php echo $page_vars['group_data'][$page_vars['group_id']]['entity_name'] ?>
@@ -172,9 +173,9 @@ $(function() {
 					<?php if(!$admin_included_checked): ?>
 					<p>Admins not included in results!</p>
 					<?php endif; ?>
+					<?php if($page_vars['group_total_number_of_messages']): ?>
 					<!--Div that will hold the pie chart-->
 	    			<div id="group_message_overview_results_div"></div>
-				
 					<div class="results">
 						<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
 						<?php if($admin_included_checked): ?>
@@ -185,6 +186,7 @@ $(function() {
 					</div>
 					<?php endif; ?>
 				</div>
+				<?php endif; ?>
 			</div>
 		
 		</div>
