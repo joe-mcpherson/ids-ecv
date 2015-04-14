@@ -102,79 +102,86 @@ $(function() {
 				<h1>Eldis Communities Visualisation</h1>
 			</div>
 
-			<div id="user-filters" class="col-md-6">
-				<form action="<?php echo $this_page_url; ?>" method="get">
-					<div class="ui-widget">
-						<label for="group">Group</label> <select id="group" name="group">
-							<option value=""></option>
-							<?php
-							foreach($page_vars['group_data'] as $group_key => $group_obj):
-							$selected = ($group_key == $page_vars['form_group']) ? 'selected="selected"':'';
-							?>
-							<option value="<?php echo $group_key; ?>" <?php echo $selected; ?>><?php echo $group_obj['entity_name']; ?></option>
-							<?php
-							endforeach;
-							?>
-						</select>
-					</div>
-
-					<div class="ui-widget">
-						<label for="start_date">Start date</label> 
-						<input class="datepicker" name="start_date" id="start_date" type="text" value="<?php echo $page_vars['form_start_date'] ?>" />
-					</div>
-
-					<div class="ui-widget">
-						<label for="end_date">End date</label> 
-						<input class="datepicker" name="end_date" id="end_date" type="text" value="<?php echo $page_vars['form_end_date'] ?>" />
-					</div>
-					
-					<?php 
-					$admin_included_checked = '';
-					if(!isset($page_vars['form_include_admin']) || (isset($page_vars['form_include_admin']) && $page_vars['form_include_admin'])){
-						$admin_included_checked ='checked="checked"';
-					}
-					?>
-					
-					<div class="ui-widget">
-						<label for="include_admin">Admin included</label> <input
-							name="include_admin" id="include_admin" type="checkbox" value="1"
-							<?php echo $admin_included_checked; ?> />
-					</div>
-					<input name="submit" id="submit" type="submit" value="Submit" />
-				</form>
-				<div id="left-side-results">
-				<?php if(isset($page_vars['country_data'])):  ?>
-				<div id="group_by_country_results_div"></div>
-				<?php endif; ?>
-				</div> 
-			</div>
-			<div id="top-level-results" class="col-md-6">
-				<?php if($page_vars['group_id']): ?>
-				<h2>
-				<?php echo $page_vars['group_data'][$page_vars['group_id']]['entity_name'] ?>
-				</h2>
-				<p>
-				<?php echo $page_vars['group_data'][$page_vars['group_id']]['description'] ?>
-				</p>
-				<?php if(!empty($page_vars['form_start_date']) || !empty($page_vars['form_end_date'])): ?>
-					<p>Date range <?php if(!empty($page_vars['form_start_date'])): echo 'from ' . $page_vars['form_start_date']; endif;  ?> to 
-					<?php if(!empty($page_vars['form_end_date'])): echo $page_vars['form_end_date']; else: echo 'NOW'; endif;  ?></p>
-				<?php endif; ?>
-				<?php if(!$admin_included_checked): ?>
-				<p>Admins not included in results!</p>
-				<?php endif; ?>
-				<!--Div that will hold the pie chart-->
-    			<div id="group_message_overview_results_div"></div>
-				
-				<div class="results">
-					<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
-					<?php if($admin_included_checked): ?>
-					<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_admin_number_of_messages'] ?></span><br>
+			<div id="left-side-main" class="col-md-6 main-col">
+				<div id="user-filters">
+					<form action="<?php echo $this_page_url; ?>" method="get">
+						<div class="ui-widget">
+							<label for="group">Group</label> <select id="group" name="group">
+								<option value=""></option>
+								<?php
+								foreach($page_vars['group_data'] as $group_key => $group_obj):
+								$selected = ($group_key == $page_vars['form_group']) ? 'selected="selected"':'';
+								?>
+								<option value="<?php echo $group_key; ?>" <?php echo $selected; ?>><?php echo $group_obj['entity_name']; ?></option>
+								<?php
+								endforeach;
+								?>
+							</select>
+						</div>
+	
+						<div class="ui-widget">
+							<label for="start_date">Start date</label> 
+							<input class="datepicker" name="start_date" id="start_date" type="text" value="<?php echo $page_vars['form_start_date'] ?>" />
+						</div>
+	
+						<div class="ui-widget">
+							<label for="end_date">End date</label> 
+							<input class="datepicker" name="end_date" id="end_date" type="text" value="<?php echo $page_vars['form_end_date'] ?>" />
+						</div>
+						
+						<?php 
+						$admin_included_checked = '';
+						if(!isset($page_vars['form_include_admin']) || (isset($page_vars['form_include_admin']) && $page_vars['form_include_admin'])){
+							$admin_included_checked ='checked="checked"';
+						}
+						?>
+						
+						<div class="ui-widget">
+							<label for="include_admin">Admin included</label> <input
+								name="include_admin" id="include_admin" type="checkbox" value="1"
+								<?php echo $admin_included_checked; ?> />
+						</div>
+						<input name="submit" id="submit" type="submit" value="Submit" />
+					</form>
+					<div id="left-side-results">
+					<?php if(isset($page_vars['country_data'])):  ?>
+					<div id="group_by_country_results_div"></div>
 					<?php endif; ?>
-					<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_nonmember_number_of_messages'] ?></span><br>
-					<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_member_number_of_messages'] ?></span><br>
+					</div> 
 				</div>
-				<?php endif; ?>
+			</div>
+			<div id="right-side-main" class="col-md-6 main-col">
+				<div id="group-data-results">
+					<?php if($page_vars['group_id']): ?>
+					<h2>
+					<?php echo $page_vars['group_data'][$page_vars['group_id']]['entity_name'] ?>
+					</h2>
+					<p>
+					<?php echo $page_vars['group_data'][$page_vars['group_id']]['description'] ?>
+					</p>
+				</div>
+				<div id="right-side-results">
+					<?php if(!empty($page_vars['form_start_date']) || !empty($page_vars['form_end_date'])): ?>
+						<p>Date range <?php if(!empty($page_vars['form_start_date'])): echo 'from ' . $page_vars['form_start_date']; endif;  ?> to 
+						<?php if(!empty($page_vars['form_end_date'])): echo $page_vars['form_end_date']; else: echo 'NOW'; endif;  ?></p>
+					<?php endif; ?>
+					
+					<?php if(!$admin_included_checked): ?>
+					<p>Admins not included in results!</p>
+					<?php endif; ?>
+					<!--Div that will hold the pie chart-->
+	    			<div id="group_message_overview_results_div"></div>
+				
+					<div class="results">
+						<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
+						<?php if($admin_included_checked): ?>
+						<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_admin_number_of_messages'] ?></span><br>
+						<?php endif; ?>
+						<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_nonmember_number_of_messages'] ?></span><br>
+						<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_member_number_of_messages'] ?></span><br>
+					</div>
+					<?php endif; ?>
+				</div>
 			</div>
 		
 		</div>
