@@ -94,7 +94,10 @@ $(function() {
 		<?php endif; ?>
 
 
-		<?php if($page_vars['message_data']['time_data']): ?>
+		<?php if($page_vars['message_data']['time_data']): 
+		$time_data_mode = (ecv_display_day_mode($page_vars['message_data']['time_data']['month'])) ? 'day':'month';
+		$time_data_format = ($time_data_mode == 'day') ? 'd/MMM/yy':'MMM/yy';
+		?>
 		/* Messages by month line graph */
 		 var data = new google.visualization.DataTable();
 	        data.addColumn('date', 'Month');
@@ -102,23 +105,24 @@ $(function() {
 
 	        data.addRows([
 
-	              		<?php foreach($page_vars['message_data']['time_data'] as $month_key => $num_messages): 
-	              		$month_key_arr = explode('-', $month_key);
-	              		$year = $month_key_arr[0];
-	              		$month = $month_key_arr[1];
+	              		<?php foreach($page_vars['message_data']['time_data'][$time_data_mode] as $time_key => $num_messages): 
+	              		$time_key_arr = explode('-', $time_key);
+	              		$year = $time_key_arr[0];
+	              		$month = $time_key_arr[1];
+	              		$day = ($time_data_mode == 'day') ?  $time_key_arr[2]:1; 
 	              		?>
-	                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>), <?php echo $num_messages; ?>],
+	                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>, <?php echo $day; ?>), <?php echo $num_messages; ?>],
 	                   <?php endforeach; ?> 
 	        ]);
 
 
 	        var options = {
-	          title: 'Number of messages per month',
+	          title: 'Number of messages per <?php echo $time_data_mode; ?>',
 	          width: 400,
 	          height: 250,
 	          hAxis: {
-	            format: 'MMM/yy',
-	            gridlines: {count: <?php echo count($page_vars['message_data']['time_data']); ?>}
+	            format: '<?php echo $time_data_format; ?>',
+	            gridlines: {count: <?php echo count($page_vars['message_data']['time_data'][$time_data_mode]); ?>}
 	          },
 	          vAxis: {
 	            gridlines: {color: 'none'},
@@ -184,31 +188,35 @@ $(function() {
 		<?php endif; ?>
 
 
-		<?php if($page_vars['discussion_data']['time_data']): ?>
-		/* Messages by month line graph */
-		 var data = new google.visualization.DataTable();
-	        data.addColumn('date', 'Month');
-	        data.addColumn('number', 'Discussions');
+		<?php if($page_vars['discussion_data']['time_data']): 
+			$time_data_mode = (ecv_display_day_mode($page_vars['discussion_data']['time_data']['month'])) ? 'day':'month';
+			$time_data_format = ($time_data_mode == 'day') ? 'd/MMM/yy':'MMM/yy';
+			?>
+			/* Messages by month line graph */
+			 var data = new google.visualization.DataTable();
+		        data.addColumn('date', 'Month');
+		        data.addColumn('number', 'Discussions');
 
-	        data.addRows([
+		        data.addRows([
 
-	              		<?php foreach($page_vars['discussion_data']['time_data'] as $month_key => $num_discussions): 
-	              		$month_key_arr = explode('-', $month_key);
-	              		$year = $month_key_arr[0];
-	              		$month = $month_key_arr[1];
-	              		?>
-	                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>), <?php echo $num_discussions; ?>],
-	                   <?php endforeach; ?> 
-	        ]);
+		              		<?php foreach($page_vars['discussion_data']['time_data'][$time_data_mode] as $time_key => $num_discussions): 
+		              		$time_key_arr = explode('-', $time_key);
+		              		$year = $time_key_arr[0];
+		              		$month = $time_key_arr[1];
+		              		$day = ($time_data_mode == 'day') ?  $time_key_arr[2]:1; 
+		              		?>
+		                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>, <?php echo $day; ?>), <?php echo $num_discussions; ?>],
+		                   <?php endforeach; ?> 
+		        ]);
 
 
 	        var options = {
-	          title: 'Number of discussion per month',
+	          title: 'Number of discussion per <?php echo $time_data_mode; ?>',
 	          width: 400,
 	          height: 250,
 	          hAxis: {
-	            format: 'MMM/yy',
-	            gridlines: {count: <?php echo count($page_vars['discussion_data']['time_data']); ?>}
+	        	format: '<?php echo $time_data_format; ?>',
+	            gridlines: {count: <?php echo count($page_vars['discussion_data']['time_data'][$time_data_mode]); ?>}
 	          },
 	          vAxis: {
 	            gridlines: {color: 'none'},

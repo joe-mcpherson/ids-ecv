@@ -169,6 +169,8 @@ function ecv_get_data_country_data($user_data, $results_json){
 function ecv_get_data_time_data($results_json){
 	/* Get messages over time data */
 	//print_r($results_json);
+	$time_array = array('month' => array(), 'day' => array());
+	$day_array = array();
 	$month_array = array();
 	$messages_over_time = array();
 	if(isset($results_json->response->docs)){
@@ -179,14 +181,22 @@ function ecv_get_data_time_data($results_json){
 			$date_created_raw = $date_created_arr_raw[0];
 			$date_created_arr = explode('-', $date_created_raw);
 			$month = $date_created_arr[0] . '-' . $date_created_arr[1];
+			$day = $date_created_raw;
 			if(!isset($month_array[$month])){
 				$month_array[$month] = 1;
 			} else {
 				$month_array[$month]++;
 			}
+			if(!isset($day_array[$day])){
+				$day_array[$day] = 1;
+			} else {
+				$day_array[$day]++;
+			}
 		}
 	}	
-	return $month_array;		
+	$time_array['month'] = $month_array;
+	$time_array['day'] = $day_array;
+	return $time_array;		
 }
 
 /*
@@ -240,6 +250,47 @@ function ecv_load_page_data(){
 		$page_vars['base_query'] = $base_query;
 	}
 	return $page_vars;	
+}
+
+
+function ecv_display_day_mode($month_arr){
+	$month_cnt = ecv_continous_months_in_range($month_arr);
+	return ($month_cnt > -1 && $month_cnt <=1);
+}
+
+/*
+ * returns number of continous months in range 
+ * We only care about continous month of data for potential switch to day
+ * display as if months are spead over a big time gap day data looks weird
+ */
+
+function ecv_continous_months_in_range($month_arr){
+	$continous = TRUE;
+	$cnt = 0;
+	if(count($month_arr) == 1){
+		return 1;
+	}
+	foreach($month_arr as $time_key => $value){ 
+		$cnt++;
+		$time_key_arr = explode('-', $time_key);
+		$year = $time_key_arr[0];
+		$month = $time_key_arr[1];
+		if(count($month_arr) != $cnt){
+			$yeardown = $year;
+			$monthdown = $month - 1;
+			if($monthdown == 0){
+				$monthdown = 12;
+				$yeardown--;
+			}
+			$monthdown = str_pad($monthdown, 2, '0', STR_PAD_LEFT);
+			if(array_key_exists($yeardown . '-' . $monthdown, $month_arr)){
+				
+			} else {
+				$continous = FALSE;
+			}
+		}
+	}
+	return ($continous) ? count($month_arr):-1;
 }
 
 
