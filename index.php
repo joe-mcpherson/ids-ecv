@@ -81,7 +81,11 @@ $(function() {
         // Set chart options
         var options = {'title':'Messages by country',
                        'width':400,
-                       'height':300};
+                       'height':<?php 
+                       $base_height = 300;
+                       $graph_height = $base_height + (count($page_vars['country_data']) * 15);
+                       echo $graph_height;
+                       ?>};
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.BarChart(document.getElementById('group_by_country_results_div'));

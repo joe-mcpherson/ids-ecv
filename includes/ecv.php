@@ -125,7 +125,6 @@ function ecv_load_page_data(){
 	$base_query = ecv_build_base_query($group_data);
 	$page_vars['group_data'] = $group_data;
 	$page_vars['base_query'] = '';
-	$page_vars['group_number_of_messages'] = '';
 	$page_vars['group_id'] = '';
 	$member_id_array = ecv_get_group_attr($group_data, 'member_id');
 	$group_admin_id = ecv_get_group_attr($group_data, 'admin_owner_id');
