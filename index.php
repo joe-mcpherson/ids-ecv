@@ -88,14 +88,14 @@ $(function() {
                        ?>};
 
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.BarChart(document.getElementById('group_by_country_results_div'));
+        var chart = new google.visualization.BarChart(document.getElementById('group_message_by_country_results_div'));
         chart.draw(data, options);
 		
 		<?php endif; ?>
 
 
 		<?php if($page_vars['message_data']['time_data']): ?>
-
+		/* Messages by month line graph */
 		 var data = new google.visualization.DataTable();
 	        data.addColumn('date', 'Month');
 	        data.addColumn('number', 'Messages');
@@ -126,7 +126,97 @@ $(function() {
 	          }
 	        };
 
-	        var chart = new google.visualization.LineChart(document.getElementById('messages_time_results_div'));
+	        var chart = new google.visualization.LineChart(document.getElementById('message_time_results_div'));
+	        chart.draw(data, options);
+	    <?php endif; ?>
+
+
+
+	    /* Discussions */
+
+	   	/* Group discussions breakdown pie chart */
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'User type');
+        data.addColumn('number', 'Discussions');
+        data.addRows([
+          ['Admin', <?php echo $page_vars['group_global']['discussion']['total_admin'] ?>],
+          ['Member', <?php echo $page_vars['group_global']['discussion']['total_member'] ?>],
+          ['Non-member', <?php echo $page_vars['group_global']['discussion']['total_nonmember'] ?>]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Number of discussions by user type',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('group_discussion_overview_results_div'));
+        chart.draw(data, options);
+
+		<?php if($page_vars['discussion_data']['country_data']): ?>
+
+    	/* Messages by country breakdown bar graph */
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'Discussions');
+        data.addRows([
+
+		<?php foreach($page_vars['discussion_data']['country_data'] as $country => $num_discussions): ?>
+          ['<?php echo $country; ?>', <?php echo $num_discussions; ?>],
+         <?php endforeach; ?> 
+        ]);
+
+        // Set chart options
+        var options = {'title':'Discussions by country',
+                       'width':400,
+                       'height':<?php 
+                       $base_height = 300;
+                       $graph_height = $base_height + (count($page_vars['discussion_data']['country_data']) * 15);
+                       echo $graph_height;
+                       ?>};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.BarChart(document.getElementById('group_discussion_by_country_results_div'));
+        chart.draw(data, options);
+		
+		<?php endif; ?>
+
+
+		<?php if($page_vars['discussion_data']['time_data']): ?>
+		/* Messages by month line graph */
+		 var data = new google.visualization.DataTable();
+	        data.addColumn('date', 'Month');
+	        data.addColumn('number', 'Discussions');
+
+	        data.addRows([
+
+	              		<?php foreach($page_vars['discussion_data']['time_data'] as $month_key => $num_discussions): 
+	              		$month_key_arr = explode('-', $month_key);
+	              		$year = $month_key_arr[0];
+	              		$month = $month_key_arr[1];
+	              		?>
+	                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>), <?php echo $num_discussions; ?>],
+	                   <?php endforeach; ?> 
+	        ]);
+
+
+	        var options = {
+	          title: 'Number of discussion per month',
+	          width: 400,
+	          height: 250,
+	          hAxis: {
+	            format: 'MMM/yy',
+	            gridlines: {count: <?php echo count($page_vars['discussion_data']['time_data']); ?>}
+	          },
+	          vAxis: {
+	            gridlines: {color: 'none'},
+	            minValue: 0
+	          }
+	        };
+
+	        var chart = new google.visualization.LineChart(document.getElementById('discussion_time_results_div'));
 	        chart.draw(data, options);
 	    <?php endif; ?>
         
@@ -229,12 +319,12 @@ $(function() {
 				<div class="col-md-6 main-col">
 					<div class="left-side-results">
 					<?php if(isset($page_vars['message_data']['country_data'])):  ?>
-					<div id="group_by_country_results_div"></div>
+					<div id="group_message_by_country_results_div"></div>
 					<?php endif; ?>
 					</div> 
 					<div class="left-side-results">
 					<?php if(isset($page_vars['message_data']['time_data'])):  ?>
-					<div id="messages_time_results_div"></div>
+					<div id="message_time_results_div"></div>
 					<?php endif; ?>
 					</div> 
 				</div>
@@ -249,6 +339,45 @@ $(function() {
 							<?php endif; ?>
 							<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total_nonmember']; ?></span><br>
 							<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total_member']; ?></span><br>
+						</div>						
+					</div>
+				</div>
+			</div>
+			<?php endif; ?>
+		<?php endif; ?>
+		
+		<!-- Discussions data -->
+		<?php if($page_vars['group_id']): ?>
+			<?php if($page_vars['group_global']['discussion']['total']): ?>
+			<div class="row">
+				<div id="heading-row" class="col-md-12">
+					<h2>Group discussions</h2>
+				</div>
+			</div>		
+			<div class="row">
+				<div class="col-md-6 main-col">
+					<div class="left-side-results">
+					<?php if(isset($page_vars['discussion_data']['country_data'])):  ?>
+					<div id="group_discussion_by_country_results_div"></div>
+					<?php endif; ?>
+					</div> 
+					<div class="left-side-results">
+					<?php if(isset($page_vars['discussion_data']['time_data'])):  ?>
+					<div id="discussion_time_results_div"></div>
+					<?php endif; ?>
+					</div> 
+				</div>
+				<div class="col-md-6 main-col">
+					<div class="right-side-results">
+						<!--Div that will hold the pie chart-->
+		    			<div id="group_discussion_overview_results_div"></div>
+						<div class="results">
+							<span class="labelspan">Total number of discussions: </span><span class="result"><?php echo $page_vars['group_global']['discussion']['total']; ?></span><br>
+							<?php if($admin_included_checked): ?>
+							<span class="labelspan">Admin discussions: </span><span class="result"><?php echo $page_vars['group_global']['discussion']['total_admin']; ?></span><br>
+							<?php endif; ?>
+							<span class="labelspan">Non-member discussions: </span><span class="result"><?php echo $page_vars['group_global']['discussion']['total_nonmember']; ?></span><br>
+							<span class="labelspan">Member discussions: </span><span class="result"><?php echo $page_vars['group_global']['discussion']['total_member']; ?></span><br>
 						</div>						
 					</div>
 				</div>

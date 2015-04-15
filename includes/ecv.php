@@ -117,7 +117,7 @@ function evc_get_form_data(&$page_vars){
 /*
  * Get the global totals data for the group 
  */
-function ecv_get_data_group_totals($entity_id, $results_json, $group_admin_id, $member_id_array){
+function ecv_get_data_group_totals($results_json, $group_admin_id, $member_id_array){
 		$totals_arr = array();
 		$group_total = $results_json->response->numFound;
 		/* Set data for number of messages breakdown */
@@ -133,11 +133,10 @@ function ecv_get_data_group_totals($entity_id, $results_json, $group_admin_id, $
 				}
 			}
 		}
-		$totals_arr[$entity_id] = array();
-		$totals_arr[$entity_id]['total'] = $group_total;
-		$totals_arr[$entity_id]['total_member'] = $member_total;
-		$totals_arr[$entity_id]['total_admin'] = $admin_total;
-		$totals_arr[$entity_id]['total_nonmember'] = $group_total - $member_total - $admin_total;
+		$totals_arr['total'] = $group_total;
+		$totals_arr['total_member'] = $member_total;
+		$totals_arr['total_admin'] = $admin_total;
+		$totals_arr['total_nonmember'] = $group_total - $member_total - $admin_total;
 		return $totals_arr;	
 }
 
@@ -226,9 +225,16 @@ function ecv_load_page_data(){
 		/* Get messages data */
 		$results_query = ecv_format_data_query($base_query, 'message', $group_admin_id);
 		$results_json = ecv_eldis_solr_search_json($results_query);
-		$page_vars['group_global'] = ecv_get_data_group_totals('message', $results_json, $group_admin_id, $member_id_array);
+		$page_vars['group_global']['message'] = ecv_get_data_group_totals($results_json, $group_admin_id, $member_id_array);
 		$page_vars['message_data']['country_data'] = ecv_get_data_country_data($user_data, $results_json);
 		$page_vars['message_data']['time_data'] = ecv_get_data_time_data($results_json);
+		
+		/* Get discussion data */
+		$results_query = ecv_format_data_query($base_query, 'discussion', $group_admin_id);
+		$results_json = ecv_eldis_solr_search_json($results_query);
+		$page_vars['group_global']['discussion'] = ecv_get_data_group_totals($results_json, $group_admin_id, $member_id_array);
+		$page_vars['discussion_data']['country_data'] = ecv_get_data_country_data($user_data, $results_json);
+		$page_vars['discussion_data']['time_data'] = ecv_get_data_time_data($results_json);		
 		
 		$page_vars['base_query'] = $base_query;
 	}
