@@ -135,7 +135,6 @@ function ecv_load_page_data(){
 		}
 		
 		/* Get messages data */
-		
 		$results_query = $base_query . '%20AND%20entity_type:message';
 		if(!isset($_REQUEST['include_admin'])){
 			$results_query .= '%20AND%20-author_entity_id:' . $group_admin_id;
@@ -145,7 +144,6 @@ function ecv_load_page_data(){
 		
 		
 		/* Set data for number of messages breakdown */
-		
 		$group_member_number_of_messages = 0;
 		$group_admin_number_of_messages = 0;
 		if(isset($results_json->response->docs)){
@@ -180,6 +178,27 @@ function ecv_load_page_data(){
 			}		
 		}
 		$page_vars['country_data'] = $country_data;
+		
+		/* Get messages over time data */
+		//print_r($results_json);
+		$month_array = array();
+		$messages_over_time = array();
+		if(isset($results_json->response->docs)){
+			foreach($results_json->response->docs as $doc){
+				/* e.g. 2014-12-15T11:27:29Z */
+				$date_created_arr_raw = explode('T', $doc->date_created);
+				/* e.g. 2014-12-15 */
+				$date_created_raw = $date_created_arr_raw[0];
+				$date_created_arr = explode('-', $date_created_raw);
+				$month = $date_created_arr[0] . '-' . $date_created_arr[1];
+				if(!isset($month_array[$month])){
+					$month_array[$month] = 1;
+				} else {
+					$month_array[$month]++;
+				}
+			}
+		}	
+		$page_vars['messages_time_data'] = $month_array;
 		
 		$page_vars['base_query'] = $base_query;
 	}

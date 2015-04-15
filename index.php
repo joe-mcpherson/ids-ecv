@@ -32,9 +32,9 @@ $(function() {
 	}
 });
 <?php if($page_vars['group_id']): ?>
-/* Google charts stuff */
+	/* Google charts stuff */
       // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages':['corechart']});
+      google.load('visualization', '1.1', {'packages':['corechart', 'timeline']});
 
       // Set a callback to run when the Google Visualization API is loaded.
       google.setOnLoadCallback(drawCharts);
@@ -89,6 +89,42 @@ $(function() {
 		
 		<?php endif; ?>
 
+
+		<?php if($page_vars['messages_time_data']): ?>
+
+		 var data = new google.visualization.DataTable();
+	        data.addColumn('date', 'Month');
+	        data.addColumn('number', 'Messages');
+
+	        data.addRows([
+
+	              		<?php foreach($page_vars['messages_time_data'] as $month_key => $num_messages): 
+	              		$month_key_arr = explode('-', $month_key);
+	              		$year = $month_key_arr[0];
+	              		$month = $month_key_arr[1];
+	              		?>
+	                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>), <?php echo $num_messages; ?>],
+	                   <?php endforeach; ?> 
+	        ]);
+
+
+	        var options = {
+	          title: 'Number of messages per month',
+	          width: 400,
+	          height: 250,
+	          hAxis: {
+	            format: 'MMM/yy',
+	            gridlines: {count: <?php echo count($page_vars['messages_time_data']); ?>}
+	          },
+	          vAxis: {
+	            gridlines: {color: 'none'},
+	            minValue: 0
+	          }
+	        };
+
+	        var chart = new google.visualization.LineChart(document.getElementById('messages_time_results_div'));
+	        chart.draw(data, options);
+	    <?php endif; ?>
         
       }
       <?php endif; ?>
@@ -185,6 +221,11 @@ $(function() {
 				<div class="left-side-results">
 				<?php if(isset($page_vars['country_data'])):  ?>
 				<div id="group_by_country_results_div"></div>
+				<?php endif; ?>
+				</div> 
+				<div class="left-side-results">
+				<?php if(isset($page_vars['messages_time_data'])):  ?>
+				<div id="messages_time_results_div"></div>
 				<?php endif; ?>
 				</div> 
 			</div>
