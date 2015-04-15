@@ -50,9 +50,9 @@ $(function() {
         data.addColumn('string', 'User type');
         data.addColumn('number', 'Messages');
         data.addRows([
-          ['Admin', <?php echo $page_vars['group_admin_number_of_messages'] ?>],
-          ['Member', <?php echo $page_vars['group_member_number_of_messages'] ?>],
-          ['Non-member', <?php echo $page_vars['group_nonmember_number_of_messages'] ?>]
+          ['Admin', <?php echo $page_vars['group_global']['message']['total_admin'] ?>],
+          ['Member', <?php echo $page_vars['group_global']['message']['total_member'] ?>],
+          ['Non-member', <?php echo $page_vars['group_global']['message']['total_nonmember'] ?>]
         ]);
 
         // Set chart options
@@ -64,7 +64,7 @@ $(function() {
         var chart = new google.visualization.PieChart(document.getElementById('group_message_overview_results_div'));
         chart.draw(data, options);
 
-		<?php if($page_vars['country_data']): ?>
+		<?php if($page_vars['message_data']['country_data']): ?>
 
     	/* Messages by country breakdown bar graph */
         // Create the data table.
@@ -73,7 +73,7 @@ $(function() {
         data.addColumn('number', 'Messages');
         data.addRows([
 
-		<?php foreach($page_vars['country_data'] as $country => $num_messages): ?>
+		<?php foreach($page_vars['message_data']['country_data'] as $country => $num_messages): ?>
           ['<?php echo $country; ?>', <?php echo $num_messages; ?>],
          <?php endforeach; ?> 
         ]);
@@ -83,7 +83,7 @@ $(function() {
                        'width':400,
                        'height':<?php 
                        $base_height = 300;
-                       $graph_height = $base_height + (count($page_vars['country_data']) * 15);
+                       $graph_height = $base_height + (count($page_vars['message_data']['country_data']) * 15);
                        echo $graph_height;
                        ?>};
 
@@ -94,7 +94,7 @@ $(function() {
 		<?php endif; ?>
 
 
-		<?php if($page_vars['messages_time_data']): ?>
+		<?php if($page_vars['message_data']['time_data']): ?>
 
 		 var data = new google.visualization.DataTable();
 	        data.addColumn('date', 'Month');
@@ -102,7 +102,7 @@ $(function() {
 
 	        data.addRows([
 
-	              		<?php foreach($page_vars['messages_time_data'] as $month_key => $num_messages): 
+	              		<?php foreach($page_vars['message_data']['time_data'] as $month_key => $num_messages): 
 	              		$month_key_arr = explode('-', $month_key);
 	              		$year = $month_key_arr[0];
 	              		$month = $month_key_arr[1];
@@ -118,7 +118,7 @@ $(function() {
 	          height: 250,
 	          hAxis: {
 	            format: 'MMM/yy',
-	            gridlines: {count: <?php echo count($page_vars['messages_time_data']); ?>}
+	            gridlines: {count: <?php echo count($page_vars['message_data']['time_data']); ?>}
 	          },
 	          vAxis: {
 	            gridlines: {color: 'none'},
@@ -219,7 +219,7 @@ $(function() {
 		
 		<!-- Messages data -->
 		<?php if($page_vars['group_id']): ?>
-			<?php if($page_vars['group_total_number_of_messages']): ?>
+			<?php if($page_vars['group_global']['message']['total']): ?>
 			<div class="row">
 				<div id="heading-row" class="col-md-12">
 					<h2>Group messages</h2>
@@ -228,12 +228,12 @@ $(function() {
 			<div class="row">
 				<div class="col-md-6 main-col">
 					<div class="left-side-results">
-					<?php if(isset($page_vars['country_data'])):  ?>
+					<?php if(isset($page_vars['message_data']['country_data'])):  ?>
 					<div id="group_by_country_results_div"></div>
 					<?php endif; ?>
 					</div> 
 					<div class="left-side-results">
-					<?php if(isset($page_vars['messages_time_data'])):  ?>
+					<?php if(isset($page_vars['message_data']['time_data'])):  ?>
 					<div id="messages_time_results_div"></div>
 					<?php endif; ?>
 					</div> 
@@ -243,12 +243,12 @@ $(function() {
 						<!--Div that will hold the pie chart-->
 		    			<div id="group_message_overview_results_div"></div>
 						<div class="results">
-							<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
+							<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total']; ?></span><br>
 							<?php if($admin_included_checked): ?>
-							<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_admin_number_of_messages'] ?></span><br>
+							<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total_admin']; ?></span><br>
 							<?php endif; ?>
-							<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_nonmember_number_of_messages'] ?></span><br>
-							<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_member_number_of_messages'] ?></span><br>
+							<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total_nonmember']; ?></span><br>
+							<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total_member']; ?></span><br>
 						</div>						
 					</div>
 				</div>
@@ -257,9 +257,11 @@ $(function() {
 		<?php endif; ?>
 		
 		<?php if(ECV_DEBUG): ?>
-		<div id="debug-row" class="row">
-			<p><?php echo $page_vars['base_query'] ?><br/><a href="<?php echo ECV_BASE_URL; ?>?q=<?php echo $page_vars['base_query'] ?>" target="_blank">launch</a></p>
-		</div>
+			<?php if($page_vars['group_id']): ?>
+			<div id="debug-row" class="row">
+				<p><?php echo $page_vars['base_query'] ?><br/><a href="<?php echo ECV_BASE_URL; ?>?q=<?php echo $page_vars['base_query'] ?>" target="_blank">launch</a></p>
+			</div>
+			<?php endif; ?>
 		<?php endif; ?>
 	</div>
 <?php include_once('includes/footer.php'); ?>

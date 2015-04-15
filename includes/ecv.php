@@ -115,6 +115,94 @@ function evc_get_form_data(&$page_vars){
 }
 
 /*
+ * Get the global totals data for the group 
+ */
+function ecv_get_data_group_totals($entity_id, $results_json, $group_admin_id, $member_id_array){
+		$totals_arr = array();
+		$group_total = $results_json->response->numFound;
+		/* Set data for number of messages breakdown */
+		$member_total = 0;
+		$admin_total = 0;
+		if(isset($results_json->response->docs)){
+			foreach($results_json->response->docs as $doc){
+				if($doc->author_entity_id == $group_admin_id){
+					$admin_total++;
+				}
+				elseif(in_array($doc->author_entity_id, $member_id_array)){
+					$member_total++;
+				}
+			}
+		}
+		$totals_arr[$entity_id] = array();
+		$totals_arr[$entity_id]['total'] = $group_total;
+		$totals_arr[$entity_id]['total_member'] = $member_total;
+		$totals_arr[$entity_id]['total_admin'] = $admin_total;
+		$totals_arr[$entity_id]['total_nonmember'] = $group_total - $member_total - $admin_total;
+		return $totals_arr;	
+}
+
+/*
+ * Country data 
+ */
+function ecv_get_data_country_data($user_data, $results_json){
+	/* Set data for user/country */
+	$country_data = array();
+	if(isset($results_json->response->docs)){
+		foreach($results_json->response->docs as $doc){
+			$user_key = ''. $doc->author_entity_id;
+			if(isset($user_data[$user_key])){
+				$user_country = $user_data[$user_key]['country'];
+				if(!isset($country_data[$user_country])){
+					$country_data[$user_country] = 1;
+				} else {
+					$country_data[$user_country]++;
+				}
+			}
+		}		
+	}
+	return $country_data;			
+}
+
+
+/*
+ * Time data 
+ */
+function ecv_get_data_time_data($results_json){
+	/* Get messages over time data */
+	//print_r($results_json);
+	$month_array = array();
+	$messages_over_time = array();
+	if(isset($results_json->response->docs)){
+		foreach($results_json->response->docs as $doc){
+			/* e.g. 2014-12-15T11:27:29Z */
+			$date_created_arr_raw = explode('T', $doc->date_created);
+			/* e.g. 2014-12-15 */
+			$date_created_raw = $date_created_arr_raw[0];
+			$date_created_arr = explode('-', $date_created_raw);
+			$month = $date_created_arr[0] . '-' . $date_created_arr[1];
+			if(!isset($month_array[$month])){
+				$month_array[$month] = 1;
+			} else {
+				$month_array[$month]++;
+			}
+		}
+	}	
+	return $month_array;		
+}
+
+/*
+ * format the query to select a entity dataset form filters 
+ */
+function ecv_format_data_query($base_query, $entity_id, $group_admin_id){
+	$results_query = $base_query . '%20AND%20entity_type:' .$entity_id;
+	if(!isset($_REQUEST['include_admin'])){
+		$results_query .= '%20AND%20-author_entity_id:' . $group_admin_id;
+	}	
+	return $results_query;
+}
+
+
+/*
  * Gets an array of data for the page (populated with form is submittes and solr is queried
  */
 function ecv_load_page_data(){
@@ -124,80 +212,23 @@ function ecv_load_page_data(){
 	$user_data = ecv_get_eldis_solr_user_data();
 	$base_query = ecv_build_base_query($group_data);
 	$page_vars['group_data'] = $group_data;
-	$page_vars['base_query'] = '';
 	$page_vars['group_id'] = '';
+	$page_vars['group_global'] = array();
 	$member_id_array = ecv_get_group_attr($group_data, 'member_id');
 	$group_admin_id = ecv_get_group_attr($group_data, 'admin_owner_id');
+	$page_vars['message_data'] = array();
+	
 	if(isset($_REQUEST['submit']) && $base_query){
 		if(isset($_REQUEST['group']) && $_REQUEST['group']){
 			$page_vars['group_id'] = $_REQUEST['group'];
 		}
 		
 		/* Get messages data */
-		$results_query = $base_query . '%20AND%20entity_type:message';
-		if(!isset($_REQUEST['include_admin'])){
-			$results_query .= '%20AND%20-author_entity_id:' . $group_admin_id;
-		}
+		$results_query = ecv_format_data_query($base_query, 'message', $group_admin_id);
 		$results_json = ecv_eldis_solr_search_json($results_query);
-		$group_total_number_of_messages = $results_json->response->numFound;
-		
-		
-		/* Set data for number of messages breakdown */
-		$group_member_number_of_messages = 0;
-		$group_admin_number_of_messages = 0;
-		if(isset($results_json->response->docs)){
-			foreach($results_json->response->docs as $doc){
-				if($doc->author_entity_id == $group_admin_id){
-					$group_admin_number_of_messages++;
-				}
-				elseif(in_array($doc->author_entity_id, $member_id_array)){
-					$group_member_number_of_messages++;
-				}
-			}
-		}
-		$page_vars['group_total_number_of_messages'] = $group_total_number_of_messages;
-		$page_vars['group_member_number_of_messages'] = $group_member_number_of_messages;
-		$page_vars['group_admin_number_of_messages'] = $group_admin_number_of_messages;
-		$page_vars['group_nonmember_number_of_messages'] = $group_total_number_of_messages - $group_member_number_of_messages - $group_admin_number_of_messages;
-		
-		
-		/* Set data for user/country */
-		$country_data = array();
-		if(isset($results_json->response->docs)){
-			foreach($results_json->response->docs as $doc){
-				$user_key = ''. $doc->author_entity_id;
-				if(isset($user_data[$user_key])){
-					$user_country = $user_data[$user_key]['country'];
-					if(!isset($country_data[$user_country])){
-						$country_data[$user_country] = 1;
-					} else {
-						$country_data[$user_country]++;
-					}
-				}
-			}		
-		}
-		$page_vars['country_data'] = $country_data;
-		
-		/* Get messages over time data */
-		//print_r($results_json);
-		$month_array = array();
-		$messages_over_time = array();
-		if(isset($results_json->response->docs)){
-			foreach($results_json->response->docs as $doc){
-				/* e.g. 2014-12-15T11:27:29Z */
-				$date_created_arr_raw = explode('T', $doc->date_created);
-				/* e.g. 2014-12-15 */
-				$date_created_raw = $date_created_arr_raw[0];
-				$date_created_arr = explode('-', $date_created_raw);
-				$month = $date_created_arr[0] . '-' . $date_created_arr[1];
-				if(!isset($month_array[$month])){
-					$month_array[$month] = 1;
-				} else {
-					$month_array[$month]++;
-				}
-			}
-		}	
-		$page_vars['messages_time_data'] = $month_array;
+		$page_vars['group_global'] = ecv_get_data_group_totals('message', $results_json, $group_admin_id, $member_id_array);
+		$page_vars['message_data']['country_data'] = ecv_get_data_country_data($user_data, $results_json);
+		$page_vars['message_data']['time_data'] = ecv_get_data_time_data($results_json);
 		
 		$page_vars['base_query'] = $base_query;
 	}
