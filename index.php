@@ -262,6 +262,6 @@ $(function() {
 		</div>
 		<?php endif; ?>
 	</div>
-<?php include('/var/www/includes/footer.php'); ?>
+<?php include_once('includes/footer.php'); ?>
 </body>
 </html>
