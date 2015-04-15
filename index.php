@@ -284,6 +284,7 @@ $(function() {
 					<h2>
 					<?php echo $page_vars['group_data'][$page_vars['group_id']]['entity_name']; ?>
 					</h2>
+					<p class="group-num-visits"><span class="labelspan">number of group members: </span><span class="result"><?php echo $page_vars['group_global']['member_count']; ?></span></p>
 					<p class="group-num-visits"><span class="labelspan">number of visits: </span><span class="result"><?php echo $page_vars['group_data'][$page_vars['group_id']]['visit_count']; ?></span></p>
 					<p class="group-description">
 					<?php echo $page_vars['group_data'][$page_vars['group_id']]['description']; ?>

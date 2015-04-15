@@ -214,6 +214,7 @@ function ecv_load_page_data(){
 	$page_vars['group_id'] = '';
 	$page_vars['group_global'] = array();
 	$member_id_array = ecv_get_group_attr($group_data, 'member_id');
+	$page_vars['group_global']['member_count'] = count($member_id_array);
 	$group_admin_id = ecv_get_group_attr($group_data, 'admin_owner_id');
 	$page_vars['message_data'] = array();
 	
