@@ -51,7 +51,7 @@ $(function() {
         data.addColumn('number', 'Messages');
         data.addRows([
           ['Admin', <?php echo $page_vars['group_global']['message']['total_admin'] ?>],
-          ['Member', <?php echo $page_vars['group_global']['message']['total_member'] ?>],
+          ['Group member', <?php echo $page_vars['group_global']['message']['total_member'] ?>],
           ['Non-member', <?php echo $page_vars['group_global']['message']['total_nonmember'] ?>]
         ]);
 
@@ -284,14 +284,14 @@ $(function() {
 					<h2>
 					<?php echo $page_vars['group_data'][$page_vars['group_id']]['entity_name']; ?>
 					</h2>
-					<p class="group-num-visits"><span class="labelspan">number of group members: </span><span class="result"><?php echo $page_vars['group_global']['member_count']; ?></span></p>
-					<p class="group-num-visits"><span class="labelspan">number of visits: </span><span class="result"><?php echo $page_vars['group_data'][$page_vars['group_id']]['visit_count']; ?></span></p>
+					<p class="group-num-visits"><span class="labelspan">number of group members (current): </span><span class="result"><?php echo $page_vars['group_global']['member_count']; ?></span></p>
+					<p class="group-num-visits"><span class="labelspan">number of visits (all time): </span><span class="result"><?php echo $page_vars['group_data'][$page_vars['group_id']]['visit_count']; ?></span></p>
 					<p class="group-description">
 					<?php echo $page_vars['group_data'][$page_vars['group_id']]['description']; ?>
 					</p>	
 					<p class="group-url">
 					<?php $edlis_communties_url = 'http://community.eldis.org' . '/' . $page_vars['group_id']; ?>
-					<span class="labelspan">Eldis Communities link: </span> <a href="<?php echo  $edlis_communties_url; ?>"><?php echo $edlis_communties_url; ?></a>
+					<a href="<?php echo  $edlis_communties_url; ?>">View this group in Eldis Communities</a>
 					</p>			
 				</div>
 				<div class="right-side-results">
@@ -331,16 +331,16 @@ $(function() {
 				</div>
 				<div class="col-md-6 main-col">
 					<div class="right-side-results">
-						<!--Div that will hold the pie chart-->
-		    			<div id="group_message_overview_results_div"></div>
 						<div class="results">
-							<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total']; ?></span><br>
+							<span class="labelspan">Total number of messages: </span><span class="result result-gg-total"><?php echo $page_vars['group_global']['message']['total']; ?></span><br>
 							<?php if($admin_included_checked): ?>
-							<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total_admin']; ?></span><br>
+							<span class="labelspan">Admin messages: </span><span class="result result-gg-admin-total"><?php echo $page_vars['group_global']['message']['total_admin']; ?></span><br>
 							<?php endif; ?>
-							<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total_nonmember']; ?></span><br>
-							<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_global']['message']['total_member']; ?></span><br>
-						</div>						
+							<span class="labelspan">Non-member messages: </span><span class="result result-gg-nonmember-total"><?php echo $page_vars['group_global']['message']['total_nonmember']; ?></span><br>
+							<span class="labelspan">Member messages: </span><span class="result result-gg-member-total"><?php echo $page_vars['group_global']['message']['total_member']; ?></span><br>
+						</div>			
+						<!--Div that will hold the pie chart-->
+		    			<div id="group_message_overview_results_div"></div>			
 					</div>
 				</div>
 			</div>
@@ -370,16 +370,16 @@ $(function() {
 				</div>
 				<div class="col-md-6 main-col">
 					<div class="right-side-results">
-						<!--Div that will hold the pie chart-->
-		    			<div id="group_discussion_overview_results_div"></div>
 						<div class="results">
-							<span class="labelspan">Total number of discussions: </span><span class="result"><?php echo $page_vars['group_global']['discussion']['total']; ?></span><br>
+							<span class="labelspan">Total number of discussions: </span><span class="result result-gg-total"><?php echo $page_vars['group_global']['discussion']['total']; ?></span><br>
 							<?php if($admin_included_checked): ?>
-							<span class="labelspan">Admin discussions: </span><span class="result"><?php echo $page_vars['group_global']['discussion']['total_admin']; ?></span><br>
+							<span class="labelspan">Admin discussions: </span><span class="result result-gg-admin-total"><?php echo $page_vars['group_global']['discussion']['total_admin']; ?></span><br>
 							<?php endif; ?>
-							<span class="labelspan">Non-member discussions: </span><span class="result"><?php echo $page_vars['group_global']['discussion']['total_nonmember']; ?></span><br>
-							<span class="labelspan">Member discussions: </span><span class="result"><?php echo $page_vars['group_global']['discussion']['total_member']; ?></span><br>
-						</div>						
+							<span class="labelspan">Non-member discussions: </span><span class="result result-gg-nonmember-total"><?php echo $page_vars['group_global']['discussion']['total_nonmember']; ?></span><br>
+							<span class="labelspan">Member discussions: </span><span class="result result-gg-member-total"><?php echo $page_vars['group_global']['discussion']['total_member']; ?></span><br>
+						</div>		
+						<!--Div that will hold the pie chart-->
+		    			<div id="group_discussion_overview_results_div"></div>				
 					</div>
 				</div>
 			</div>

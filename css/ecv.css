@@ -79,3 +79,18 @@ span.result {
 #footer-right img {
 	padding-top:0;
 }
+
+.result-gg-nonmember-total {
+	background-color:#FF9900;
+	padding:0 4px;
+}
+.result-gg-member-total {
+	background-color:#DC3912;
+	padding:0 4px;
+	color:#fff;
+}
+.result-gg-admin-total {
+	background-color:#3366CC;
+	padding:0 4px;
+	color:#fff;
+}
