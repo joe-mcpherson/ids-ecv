@@ -173,6 +173,13 @@ $(function() {
 				<?php endif; ?>
 			</div>
 		</div>
+		
+		<!-- Messages data -->
+		<div class="row">
+			<div id="heading-row" class="col-md-12">
+				<h2>Group messages</h2>
+			</div>
+		</div>		
 		<div class="row">
 			<div class="col-md-6 main-col">
 				<div class="left-side-results">
@@ -199,8 +206,8 @@ $(function() {
 				</div>
 				<?php endif; ?>
 			</div>
-		
 		</div>
+		
 		<?php if(ECV_DEBUG): ?>
 		<div id="debug-row" class="row">
 			<p><?php echo $page_vars['base_query'] ?><br/><a href="<?php echo ECV_BASE_URL; ?>?q=<?php echo $page_vars['base_query'] ?>" target="_blank">launch</a></p>

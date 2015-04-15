@@ -133,6 +133,9 @@ function ecv_load_page_data(){
 		if(isset($_REQUEST['group']) && $_REQUEST['group']){
 			$page_vars['group_id'] = $_REQUEST['group'];
 		}
+		
+		/* Get messages data */
+		
 		$results_query = $base_query . '%20AND%20entity_type:message';
 		if(!isset($_REQUEST['include_admin'])){
 			$results_query .= '%20AND%20-author_entity_id:' . $group_admin_id;
