@@ -186,14 +186,17 @@ $(function() {
 				<?php if($page_vars['group_id']): ?>
 				<div id="group-data-results">
 					
-					<img class="group-picture" src="<?php echo $page_vars['group_data'][$page_vars['group_id']]['picture'] ?>"/>
+					<img class="group-picture" src="<?php echo $page_vars['group_data'][$page_vars['group_id']]['picture']; ?>"/>
 					<h2>
-					<?php echo $page_vars['group_data'][$page_vars['group_id']]['entity_name'] ?>
+					<?php echo $page_vars['group_data'][$page_vars['group_id']]['entity_name']; ?>
 					</h2>
-					<p><span class="labelspan">number of visits: </span><span class="result"><?php echo $page_vars['group_data'][$page_vars['group_id']]['visit_count'] ?></span></p>
-					
-					<p>
-					<?php echo $page_vars['group_data'][$page_vars['group_id']]['description'] ?>
+					<p class="group-num-visits"><span class="labelspan">number of visits: </span><span class="result"><?php echo $page_vars['group_data'][$page_vars['group_id']]['visit_count']; ?></span></p>
+					<p class="group-description">
+					<?php echo $page_vars['group_data'][$page_vars['group_id']]['description']; ?>
+					</p>	
+					<p class="group-url">
+					<?php $edlis_communties_url = 'http://community.eldis.org' . '/' . $page_vars['group_id']; ?>
+					<span class="labelspan">Eldis Communities link: </span> <a href="<?php echo  $edlis_communties_url; ?>"><?php echo $edlis_communties_url; ?></a>
 					</p>			
 				</div>
 				<div class="right-side-results">
@@ -211,43 +214,43 @@ $(function() {
 		</div>
 		
 		<!-- Messages data -->
-		<div class="row">
-			<div id="heading-row" class="col-md-12">
-				<h2>Group messages</h2>
-			</div>
-		</div>		
-		<div class="row">
-			<div class="col-md-6 main-col">
-				<div class="left-side-results">
-				<?php if(isset($page_vars['country_data'])):  ?>
-				<div id="group_by_country_results_div"></div>
-				<?php endif; ?>
-				</div> 
-				<div class="left-side-results">
-				<?php if(isset($page_vars['messages_time_data'])):  ?>
-				<div id="messages_time_results_div"></div>
-				<?php endif; ?>
-				</div> 
-			</div>
-			<div class="col-md-6 main-col">
-				<?php if($page_vars['group_id']): ?>
-				<div class="right-side-results">
-					<?php if($page_vars['group_total_number_of_messages']): ?>
-					<!--Div that will hold the pie chart-->
-	    			<div id="group_message_overview_results_div"></div>
-					<div class="results">
-						<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
-						<?php if($admin_included_checked): ?>
-						<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_admin_number_of_messages'] ?></span><br>
-						<?php endif; ?>
-						<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_nonmember_number_of_messages'] ?></span><br>
-						<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_member_number_of_messages'] ?></span><br>
-					</div>
-					<?php endif; ?>
+		<?php if($page_vars['group_id']): ?>
+			<?php if($page_vars['group_total_number_of_messages']): ?>
+			<div class="row">
+				<div id="heading-row" class="col-md-12">
+					<h2>Group messages</h2>
 				</div>
-				<?php endif; ?>
+			</div>		
+			<div class="row">
+				<div class="col-md-6 main-col">
+					<div class="left-side-results">
+					<?php if(isset($page_vars['country_data'])):  ?>
+					<div id="group_by_country_results_div"></div>
+					<?php endif; ?>
+					</div> 
+					<div class="left-side-results">
+					<?php if(isset($page_vars['messages_time_data'])):  ?>
+					<div id="messages_time_results_div"></div>
+					<?php endif; ?>
+					</div> 
+				</div>
+				<div class="col-md-6 main-col">
+					<div class="right-side-results">
+						<!--Div that will hold the pie chart-->
+		    			<div id="group_message_overview_results_div"></div>
+						<div class="results">
+							<span class="labelspan">Total number of messages: </span><span class="result"><?php echo $page_vars['group_total_number_of_messages'] ?></span><br>
+							<?php if($admin_included_checked): ?>
+							<span class="labelspan">Admin messages: </span><span class="result"><?php echo $page_vars['group_admin_number_of_messages'] ?></span><br>
+							<?php endif; ?>
+							<span class="labelspan">Non-member messages: </span><span class="result"><?php echo $page_vars['group_nonmember_number_of_messages'] ?></span><br>
+							<span class="labelspan">Member messages: </span><span class="result"><?php echo $page_vars['group_member_number_of_messages'] ?></span><br>
+						</div>						
+					</div>
+				</div>
 			</div>
-		</div>
+			<?php endif; ?>
+		<?php endif; ?>
 		
 		<?php if(ECV_DEBUG): ?>
 		<div id="debug-row" class="row">

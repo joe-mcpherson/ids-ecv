@@ -75,3 +75,7 @@ span.result {
 	font-size:1.2em; 
 	font-weight:bold;	
 }
+
+#footer-right img {
+	padding-top:0;
+}
