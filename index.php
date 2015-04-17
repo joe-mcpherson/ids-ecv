@@ -43,190 +43,191 @@ $(function() {
       // instantiates the pie chart, passes in the data and
       // draws it.
       function drawCharts() {
-
-    	/* Group messages breakdown pie chart */
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'User type');
-        data.addColumn('number', 'Messages');
-        data.addRows([
-          ['Admin', <?php echo $page_vars['group_global']['message']['total_admin'] ?>],
-          ['Group member', <?php echo $page_vars['group_global']['message']['total_member'] ?>],
-          ['Non-member', <?php echo $page_vars['group_global']['message']['total_nonmember'] ?>]
-        ]);
-
-        // Set chart options
-        var options = {'title':'Number of messages by user type',
-                       'width':400,
-                       'height':300};
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('group_message_overview_results_div'));
-        chart.draw(data, options);
-
-		<?php if($page_vars['message_data']['country_data']): ?>
-
-    	/* Messages by country breakdown bar graph */
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Country');
-        data.addColumn('number', 'Messages');
-        data.addRows([
-
-		<?php foreach($page_vars['message_data']['country_data'] as $country => $num_messages): ?>
-          ['<?php echo $country; ?>', <?php echo $num_messages; ?>],
-         <?php endforeach; ?> 
-        ]);
-
-        // Set chart options
-        var options = {'title':'Messages by country',
-                       'width':400,
-                       'height':<?php 
-                       $base_height = 300;
-                       $graph_height = $base_height + (count($page_vars['message_data']['country_data']) * 15);
-                       echo $graph_height;
-                       ?>};
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.BarChart(document.getElementById('group_message_by_country_results_div'));
-        chart.draw(data, options);
-		
-		<?php endif; ?>
-
-
-		<?php if($page_vars['message_data']['time_data']): 
-		$time_data_mode = (ecv_display_day_mode($page_vars['message_data']['time_data']['month'])) ? 'day':'month';
-		$time_data_format = ($time_data_mode == 'day') ? 'd/MMM/yy':'MMM/yy';
-		?>
-		/* Messages by month line graph */
-		 var data = new google.visualization.DataTable();
-	        data.addColumn('date', 'Month');
+		<?php if( $page_vars['group_global']['message']['total'] > 0): ?>
+	    	/* Group messages breakdown pie chart */
+	        // Create the data table.
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('string', 'User type');
 	        data.addColumn('number', 'Messages');
-
 	        data.addRows([
-
-	              		<?php foreach($page_vars['message_data']['time_data'][$time_data_mode] as $time_key => $num_messages): 
-	              		$time_key_arr = explode('-', $time_key);
-	              		$year = $time_key_arr[0];
-	              		$month = $time_key_arr[1];
-	              		$day = ($time_data_mode == 'day') ?  $time_key_arr[2]:1; 
-	              		?>
-	                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>, <?php echo $day; ?>), <?php echo $num_messages; ?>],
-	                   <?php endforeach; ?> 
+	          ['Admin', <?php echo $page_vars['group_global']['message']['total_admin'] ?>],
+	          ['Group member', <?php echo $page_vars['group_global']['message']['total_member'] ?>],
+	          ['Non-member', <?php echo $page_vars['group_global']['message']['total_nonmember'] ?>]
 	        ]);
-
-
-	        var options = {
-	          title: 'Number of messages per <?php echo $time_data_mode; ?>',
-	          width: 400,
-	          height: 250,
-	          hAxis: {
-	            format: '<?php echo $time_data_format; ?>',
-	            gridlines: {count: <?php echo count($page_vars['message_data']['time_data'][$time_data_mode]); ?>}
-	          },
-	          vAxis: {
-	            gridlines: {color: 'none'},
-	            minValue: 0
-	          }
-	        };
-
-	        var chart = new google.visualization.LineChart(document.getElementById('message_time_results_div'));
+	
+	        // Set chart options
+	        var options = {'title':'Number of messages by user type',
+	                       'width':400,
+	                       'height':300};
+	
+	        // Instantiate and draw our chart, passing in some options.
+	        var chart = new google.visualization.PieChart(document.getElementById('group_message_overview_results_div'));
 	        chart.draw(data, options);
-	    <?php endif; ?>
-
-
-
-	    /* Discussions */
-
-	   	/* Group discussions breakdown pie chart */
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'User type');
-        data.addColumn('number', 'Discussions');
-        data.addRows([
-          ['Admin', <?php echo $page_vars['group_global']['discussion']['total_admin'] ?>],
-          ['Member', <?php echo $page_vars['group_global']['discussion']['total_member'] ?>],
-          ['Non-member', <?php echo $page_vars['group_global']['discussion']['total_nonmember'] ?>]
-        ]);
-
-        // Set chart options
-        var options = {'title':'Number of discussions by user type',
-                       'width':400,
-                       'height':300};
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('group_discussion_overview_results_div'));
-        chart.draw(data, options);
-
-		<?php if($page_vars['discussion_data']['country_data']): ?>
-
-    	/* Messages by country breakdown bar graph */
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Country');
-        data.addColumn('number', 'Discussions');
-        data.addRows([
-
-		<?php foreach($page_vars['discussion_data']['country_data'] as $country => $num_discussions): ?>
-          ['<?php echo $country; ?>', <?php echo $num_discussions; ?>],
-         <?php endforeach; ?> 
-        ]);
-
-        // Set chart options
-        var options = {'title':'Discussions by country',
-                       'width':400,
-                       'height':<?php 
-                       $base_height = 300;
-                       $graph_height = $base_height + (count($page_vars['discussion_data']['country_data']) * 15);
-                       echo $graph_height;
-                       ?>};
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.BarChart(document.getElementById('group_discussion_by_country_results_div'));
-        chart.draw(data, options);
-		
-		<?php endif; ?>
-
-
-		<?php if($page_vars['discussion_data']['time_data']): 
-			$time_data_mode = (ecv_display_day_mode($page_vars['discussion_data']['time_data']['month'])) ? 'day':'month';
+	
+			<?php if($page_vars['message_data']['country_data']): ?>
+	
+	    	/* Messages by country breakdown bar graph */
+	        // Create the data table.
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('string', 'Country');
+	        data.addColumn('number', 'Messages');
+	        data.addRows([
+	
+			<?php foreach($page_vars['message_data']['country_data'] as $country => $num_messages): ?>
+	          ['<?php echo $country; ?>', <?php echo $num_messages; ?>],
+	         <?php endforeach; ?> 
+	        ]);
+	
+	        // Set chart options
+	        var options = {'title':'Messages by country',
+	                       'width':400,
+	                       'height':<?php 
+	                       $base_height = 300;
+	                       $graph_height = $base_height + (count($page_vars['message_data']['country_data']) * 15);
+	                       echo $graph_height;
+	                       ?>};
+	
+	        // Instantiate and draw our chart, passing in some options.
+	        var chart = new google.visualization.BarChart(document.getElementById('group_message_by_country_results_div'));
+	        chart.draw(data, options);
+			
+			<?php endif; ?>
+	
+	
+			<?php if($page_vars['message_data']['time_data']): 
+			$time_data_mode = (ecv_display_day_mode($page_vars['message_data']['time_data']['month'])) ? 'day':'month';
 			$time_data_format = ($time_data_mode == 'day') ? 'd/MMM/yy':'MMM/yy';
 			?>
 			/* Messages by month line graph */
 			 var data = new google.visualization.DataTable();
 		        data.addColumn('date', 'Month');
-		        data.addColumn('number', 'Discussions');
-
+		        data.addColumn('number', 'Messages');
+	
 		        data.addRows([
-
-		              		<?php foreach($page_vars['discussion_data']['time_data'][$time_data_mode] as $time_key => $num_discussions): 
+	
+		              		<?php foreach($page_vars['message_data']['time_data'][$time_data_mode] as $time_key => $num_messages): 
 		              		$time_key_arr = explode('-', $time_key);
 		              		$year = $time_key_arr[0];
 		              		$month = $time_key_arr[1];
 		              		$day = ($time_data_mode == 'day') ?  $time_key_arr[2]:1; 
 		              		?>
-		                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>, <?php echo $day; ?>), <?php echo $num_discussions; ?>],
+		                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>, <?php echo $day; ?>), <?php echo $num_messages; ?>],
 		                   <?php endforeach; ?> 
 		        ]);
-
-
-	        var options = {
-	          title: 'Number of discussion per <?php echo $time_data_mode; ?>',
-	          width: 400,
-	          height: 250,
-	          hAxis: {
-	        	format: '<?php echo $time_data_format; ?>',
-	            gridlines: {count: <?php echo count($page_vars['discussion_data']['time_data'][$time_data_mode]); ?>}
-	          },
-	          vAxis: {
-	            gridlines: {color: 'none'},
-	            minValue: 0
-	          }
-	        };
-
-	        var chart = new google.visualization.LineChart(document.getElementById('discussion_time_results_div'));
-	        chart.draw(data, options);
+	
+	
+		        var options = {
+		          title: 'Number of messages per <?php echo $time_data_mode; ?>',
+		          width: 400,
+		          height: 250,
+		          hAxis: {
+		            format: '<?php echo $time_data_format; ?>',
+		            gridlines: {count: <?php echo count($page_vars['message_data']['time_data'][$time_data_mode]); ?>}
+		          },
+		          vAxis: {
+		            gridlines: {color: 'none'},
+		            minValue: 0
+		          }
+		        };
+	
+		        var chart = new google.visualization.LineChart(document.getElementById('message_time_results_div'));
+		        chart.draw(data, options);
+		    <?php endif; ?>
 	    <?php endif; ?>
+		
+	    <?php if( $page_vars['group_global']['discussion']['total'] > 0): ?>
+		    /* Discussions */
+	
+		   	/* Group discussions breakdown pie chart */
+	        // Create the data table.
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('string', 'User type');
+	        data.addColumn('number', 'Discussions');
+	        data.addRows([
+	          ['Admin', <?php echo $page_vars['group_global']['discussion']['total_admin'] ?>],
+	          ['Member', <?php echo $page_vars['group_global']['discussion']['total_member'] ?>],
+	          ['Non-member', <?php echo $page_vars['group_global']['discussion']['total_nonmember'] ?>]
+	        ]);
+	
+	        // Set chart options
+	        var options = {'title':'Number of discussions by user type',
+	                       'width':400,
+	                       'height':300};
+	
+	        // Instantiate and draw our chart, passing in some options.
+	        var chart = new google.visualization.PieChart(document.getElementById('group_discussion_overview_results_div'));
+	        chart.draw(data, options);
+	
+			<?php if($page_vars['discussion_data']['country_data']): ?>
+	
+	    	/* Messages by country breakdown bar graph */
+	        // Create the data table.
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('string', 'Country');
+	        data.addColumn('number', 'Discussions');
+	        data.addRows([
+	
+			<?php foreach($page_vars['discussion_data']['country_data'] as $country => $num_discussions): ?>
+	          ['<?php echo $country; ?>', <?php echo $num_discussions; ?>],
+	         <?php endforeach; ?> 
+	        ]);
+	
+	        // Set chart options
+	        var options = {'title':'Discussions by country',
+	                       'width':400,
+	                       'height':<?php 
+	                       $base_height = 300;
+	                       $graph_height = $base_height + (count($page_vars['discussion_data']['country_data']) * 15);
+	                       echo $graph_height;
+	                       ?>};
+	
+	        // Instantiate and draw our chart, passing in some options.
+	        var chart = new google.visualization.BarChart(document.getElementById('group_discussion_by_country_results_div'));
+	        chart.draw(data, options);
+			
+			<?php endif; ?>
+	
+	
+			<?php if($page_vars['discussion_data']['time_data']): 
+				$time_data_mode = (ecv_display_day_mode($page_vars['discussion_data']['time_data']['month'])) ? 'day':'month';
+				$time_data_format = ($time_data_mode == 'day') ? 'd/MMM/yy':'MMM/yy';
+				?>
+				/* Messages by month line graph */
+				 var data = new google.visualization.DataTable();
+			        data.addColumn('date', 'Month');
+			        data.addColumn('number', 'Discussions');
+	
+			        data.addRows([
+	
+			              		<?php foreach($page_vars['discussion_data']['time_data'][$time_data_mode] as $time_key => $num_discussions): 
+			              		$time_key_arr = explode('-', $time_key);
+			              		$year = $time_key_arr[0];
+			              		$month = $time_key_arr[1];
+			              		$day = ($time_data_mode == 'day') ?  $time_key_arr[2]:1; 
+			              		?>
+			                    [new Date(<?php echo $year; ?>, <?php echo $month - 1; ?>, <?php echo $day; ?>), <?php echo $num_discussions; ?>],
+			                   <?php endforeach; ?> 
+			        ]);
+	
+	
+		        var options = {
+		          title: 'Number of discussion per <?php echo $time_data_mode; ?>',
+		          width: 400,
+		          height: 250,
+		          hAxis: {
+		        	format: '<?php echo $time_data_format; ?>',
+		            gridlines: {count: <?php echo count($page_vars['discussion_data']['time_data'][$time_data_mode]); ?>}
+		          },
+		          vAxis: {
+		            gridlines: {color: 'none'},
+		            minValue: 0
+		          }
+		        };
+	
+		        var chart = new google.visualization.LineChart(document.getElementById('discussion_time_results_div'));
+		        chart.draw(data, options);
+		    <?php endif; ?>
+		<?php endif; ?>
         
       }
       <?php endif; ?>
